@@ -258,6 +258,22 @@
             color: white;
         }
 
+        .order-photos-preview {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+
+        .order-photo-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -456,6 +472,13 @@
                     ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
                     <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
                     <div class="order-info"><strong>Data:</strong> ${order.data}</div>
+                    ${order.photos.length > 0 ? `
+                        <div class="order-photos-preview">
+                            ${order.photos.map((photo, i) => `
+                                <img src="${photo.data}" alt="Foto ${i + 1}" class="order-photo-thumb">
+                            `).join('')}
+                        </div>
+                    ` : ''}
                     <div class="order-actions">
                         <button class="btn btn-small btn-export" onclick="exportOrder(${index})">📤 Esporta</button>
                         <button class="btn btn-small btn-delete" onclick="deleteOrder(${index})">🗑️ Elimina</button>
