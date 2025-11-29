@@ -340,6 +340,27 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="unita">Unità di Misura *</label>
+                    <select id="unita" required>
+                        <option value="">Seleziona unità...</option>
+                        <option value="Pz">Pz (Pezzi)</option>
+                        <option value="Kg">Kg (Kilogrammi)</option>
+                        <option value="Lt">Lt (Litri)</option>
+                        <option value="Cf">Cf (Confezioni)</option>
+                        <option value="Sc">Sc (Scatole)</option>
+                        <option value="Pacco">Pacco</option>
+                        <option value="Rotolo">Rotolo</option>
+                        <option value="Mt">Mt (Metri)</option>
+                        <option value="Altro">Altro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fornitore">Fornitore (opzionale)</label>
+                    <input type="text" id="fornitore" placeholder="Es: MARR, FOPPA, Woerndle...">
+                </div>
+
+                <div class="form-group">
                     <label for="note">Note (opzionale)</label>
                     <textarea id="note" placeholder="Aggiungi dettagli aggiuntivi..."></textarea>
                 </div>
@@ -455,6 +476,8 @@
                 reparto: document.getElementById('reparto').value,
                 descrizione: document.getElementById('descrizione').value,
                 quantita: document.getElementById('quantita').value,
+                unita: document.getElementById('unita').value,
+                fornitore: document.getElementById('fornitore').value,
                 note: document.getElementById('note').value,
                 urgenza: document.getElementById('urgenza').value,
                 photos: [...photos],
@@ -492,7 +515,8 @@
                     <h3>${order.descrizione}</h3>
                     <div class="order-info"><strong>Struttura:</strong> ${order.struttura}</div>
                     <div class="order-info"><strong>Reparto:</strong> ${order.reparto}</div>
-                    <div class="order-info"><strong>Quantità:</strong> ${order.quantita}</div>
+                    <div class="order-info"><strong>Quantità:</strong> ${order.quantita} ${order.unita}</div>
+                    ${order.fornitore ? `<div class="order-info"><strong>Fornitore:</strong> ${order.fornitore}</div>` : ''}
                     <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
                     ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
                     <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
@@ -567,7 +591,8 @@
     <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
     <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
     <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
-    <div class="info-row"><span class="label">Quantità:</span> ${order.quantita}</div>
+    <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
+    ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
     <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
     ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
     <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
@@ -630,7 +655,8 @@
             <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
             <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
             <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
-            <div class="info-row"><span class="label">Quantità:</span> ${order.quantita}</div>
+            <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
+            ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
             <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
             ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
             <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
