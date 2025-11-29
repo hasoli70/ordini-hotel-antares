@@ -333,6 +333,16 @@
                     <textarea id="note" placeholder="Aggiungi dettagli aggiuntivi..."></textarea>
                 </div>
 
+                <div class="form-group">
+                    <label for="urgenza">Urgenza *</label>
+                    <select id="urgenza" required>
+                        <option value="">Seleziona urgenza...</option>
+                        <option value="Urgente">🔴 Urgente</option>
+                        <option value="Per stagione in corso">🟡 Per stagione in corso</option>
+                        <option value="Fuori stagione">🟢 Fuori stagione</option>
+                    </select>
+                </div>
+
                 <div class="photo-section">
                     <label>📷 Foto Allegate</label>
                     <div class="photo-buttons">
@@ -434,6 +444,7 @@
                 descrizione: document.getElementById('descrizione').value,
                 quantita: document.getElementById('quantita').value,
                 note: document.getElementById('note').value,
+                urgenza: document.getElementById('urgenza').value,
                 photos: [...photos],
                 data: new Date().toLocaleString('it-IT')
             };
@@ -469,6 +480,7 @@
                     <h3>${order.descrizione}</h3>
                     <div class="order-info"><strong>Reparto:</strong> ${order.reparto}</div>
                     <div class="order-info"><strong>Quantità:</strong> ${order.quantita}</div>
+                    <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
                     ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
                     <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
                     <div class="order-info"><strong>Data:</strong> ${order.data}</div>
@@ -542,6 +554,7 @@
     <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
     <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
     <div class="info-row"><span class="label">Quantità:</span> ${order.quantita}</div>
+    <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
     ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
     <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
     
@@ -602,6 +615,7 @@
             </div>
             <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
             <div class="info-row"><span class="label">Quantità:</span> ${order.quantita}</div>
+            <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
             ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
             <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
             ${order.photos.length > 0 ? `
