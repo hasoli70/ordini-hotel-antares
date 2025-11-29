@@ -306,6 +306,17 @@
 
             <form id="orderForm">
                 <div class="form-group">
+                    <label for="struttura">Struttura *</label>
+                    <select id="struttura" required>
+                        <option value="">Seleziona struttura...</option>
+                        <option value="Hotel">Hotel</option>
+                        <option value="Residence">Residence</option>
+                        <option value="Lores">Lores</option>
+                        <option value="Boè">Boè</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="reparto">Reparto *</label>
                     <select id="reparto" required>
                         <option value="">Seleziona reparto...</option>
@@ -440,6 +451,7 @@
 
             const order = {
                 id: Date.now(),
+                struttura: document.getElementById('struttura').value,
                 reparto: document.getElementById('reparto').value,
                 descrizione: document.getElementById('descrizione').value,
                 quantita: document.getElementById('quantita').value,
@@ -478,6 +490,7 @@
             container.innerHTML = orders.map((order, index) => `
                 <div class="order-card">
                     <h3>${order.descrizione}</h3>
+                    <div class="order-info"><strong>Struttura:</strong> ${order.struttura}</div>
                     <div class="order-info"><strong>Reparto:</strong> ${order.reparto}</div>
                     <div class="order-info"><strong>Quantità:</strong> ${order.quantita}</div>
                     <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
@@ -551,6 +564,7 @@
         <p>Hotel Antares - Selva Gardena</p>
     </div>
     
+    <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
     <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
     <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
     <div class="info-row"><span class="label">Quantità:</span> ${order.quantita}</div>
@@ -611,8 +625,10 @@
     ${orders.map((order, i) => `
         <div class="order-card">
             <div class="order-header">
-                <h2>Ordine #${i + 1} - ${order.reparto}</h2>
+                <h2>Ordine #${i + 1} - ${order.struttura} - ${order.reparto}</h2>
             </div>
+            <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
+            <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
             <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
             <div class="info-row"><span class="label">Quantità:</span> ${order.quantita}</div>
             <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
