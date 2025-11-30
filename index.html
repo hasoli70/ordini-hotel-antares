@@ -1,709 +1,819 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordini Reparti - Hotel Antares</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>Ordini Reparti - Hotel Antares (con avanzamento)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1f2933;
+      padding: 20px;
+    }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.4);
+    }
 
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 4px;
+      font-size: 26px;
+    }
 
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
+    .subtitle {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #4b5563;
+      font-size: 14px;
+    }
 
-        .form-container {
-            padding: 25px;
-        }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 20px;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-            font-size: 14px;
-        }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+      border: 1px solid #e5e7eb;
+    }
 
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            font-family: inherit;
-        }
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+    .card h2 span.emoji {
+      font-size: 20px;
+    }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
 
-        .photo-section {
-            margin: 25px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
+    .form-group {
+      margin-bottom: 10px;
+    }
 
-        .photo-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
 
-        .btn {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+    }
 
-        .btn-camera {
-            background: #4CAF50;
-            color: white;
-        }
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
 
-        .btn-camera:hover {
-            background: #45a049;
-        }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 1px rgba(99,102,241,.35);
+    }
 
-        .btn-gallery {
-            background: #2196F3;
-            color: white;
-        }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
 
-        .btn-gallery:hover {
-            background: #0b7dda;
-        }
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
 
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            font-size: 18px;
-        }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-weight: 500;
+    }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
 
-        .btn-submit:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
 
-        .photos-preview {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
+    .btn-outline {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #374151;
+    }
 
-        .photo-item {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
 
-        .photo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .photos-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
 
-        .photo-remove {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(244, 67, 54, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .photos-preview img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
 
-        .photo-count {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            margin-top: 10px;
-        }
+    .photo-count {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
 
-        input[type="file"] {
-            display: none;
-        }
+    .orders-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
 
-        .orders-list {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
 
-        .orders-list h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
+    .filter-group select {
+      width: auto;
+    }
 
-        .order-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-        }
+    .orders-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
 
-        .order-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
+    .orders-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 540px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
 
-        .order-info {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
+    .order-card {
+      border-radius: 14px;
+      background: #f9fafb;
+      padding: 10px 11px;
+      border: 1px solid #e5e7eb;
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: flex-start;
+    }
 
-        .order-info strong {
-            color: #333;
-        }
+    @media (max-width: 700px) {
+      .order-card {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        .order-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-        }
+    .order-main {
+      font-size: 13px;
+    }
 
-        .btn-small {
-            padding: 8px 15px;
-            font-size: 14px;
-            flex: 1;
-        }
+    .order-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
 
-        .btn-delete {
-            background: #f44336;
-            color: white;
-        }
+    .order-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 3px;
+    }
 
-        .btn-export {
-            background: #4CAF50;
-            color: white;
-        }
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
 
-        .order-photos-preview {
-            display: flex;
-            gap: 5px;
-            margin-top: 10px;
-            overflow-x: auto;
-        }
+    .tag-struct {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: #312e81;
+    }
 
-        .order-photo-thumb {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
-            object-fit: cover;
-            border: 2px solid #e0e0e0;
-            flex-shrink: 0;
-        }
+    .tag-reparto {
+      background: #ecfdf5;
+      border-color: #bbf7d0;
+      color: #14532d;
+    }
 
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
+    .tag-urg {
+      background: #fef3c7;
+      border-color: #fde68a;
+      color: #92400e;
+    }
 
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+    .order-line {
+      margin-bottom: 2px;
+      color: #4b5563;
+    }
 
-        @media (max-width: 480px) {
-            .photo-buttons {
-                flex-direction: column;
-            }
-        }
-    </style>
+    .order-line span.label {
+      font-weight: 500;
+    }
+
+    .order-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .order-side {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .completion-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      font-size: 12px;
+    }
+
+    .completion-select {
+      font-size: 12px;
+      padding: 4px 6px;
+      border-radius: 999px;
+    }
+
+    .completion-pill {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .comp-0 {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .comp-50 {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .comp-100 {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .order-photos-inline {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .order-photos-inline img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .no-orders {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      padding: 18px 4px 10px;
+    }
+
+    .alert {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #059669;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      display: none;
+      z-index: 100;
+    }
+
+    .alert.error {
+      background: #dc2626;
+      box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📦 Gestione Ordini Reparti</h1>
-            <p>Hotel Antares - Selva Gardena</p>
+<div class="app">
+  <h1>📦 Ordini Reparti - Hotel Antares</h1>
+  <div class="subtitle">Gestione ordini con foto + avanzamento (0 / 50 / 100%)</div>
+
+  <div class="layout">
+    <!-- FORM NUOVO ORDINE -->
+    <div class="card">
+      <h2><span class="emoji">➕</span> Nuovo Ordine</h2>
+
+      <form id="orderForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="struttura">Struttura *</label>
+            <select id="struttura" required>
+              <option value="">Seleziona...</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Residence">Residence</option>
+              <option value="Lores">Lores</option>
+              <option value="Boè">Boè</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reparto">Reparto *</label>
+            <select id="reparto" required>
+              <option value="">Seleziona...</option>
+              <option value="Cucina">Cucina</option>
+              <option value="Sala">Sala</option>
+              <option value="Bar">Bar</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Reception">Reception</option>
+              <option value="Manutenzione">Manutenzione</option>
+            </select>
+          </div>
         </div>
 
-        <div class="form-container">
-            <div id="alert" style="display: none;"></div>
-
-            <form id="orderForm">
-                <div class="form-group">
-                    <label for="struttura">Struttura *</label>
-                    <select id="struttura" required>
-                        <option value="">Seleziona struttura...</option>
-                        <option value="Hotel">Hotel</option>
-                        <option value="Residence">Residence</option>
-                        <option value="Lores">Lores</option>
-                        <option value="Boè">Boè</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="reparto">Reparto *</label>
-                    <select id="reparto" required>
-                        <option value="">Seleziona reparto...</option>
-                        <option value="Cucina">Cucina</option>
-                        <option value="Sala">Sala</option>
-                        <option value="Bar">Bar</option>
-                        <option value="Housekeeping">Housekeeping</option>
-                        <option value="Reception">Reception</option>
-                        <option value="Manutenzione">Manutenzione</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="descrizione">Descrizione Articolo *</label>
-                    <input type="text" id="descrizione" required placeholder="Es: Tovaglioli bianchi 40x40">
-                </div>
-
-                <div class="form-group">
-                    <label for="quantita">Quantità *</label>
-                    <input type="number" id="quantita" required min="1" placeholder="Es: 50">
-                </div>
-
-                <div class="form-group">
-                    <label for="unita">Unità di Misura *</label>
-                    <select id="unita" required>
-                        <option value="">Seleziona unità...</option>
-                        <option value="Pz">Pz (Pezzi)</option>
-                        <option value="Kg">Kg (Kilogrammi)</option>
-                        <option value="Lt">Lt (Litri)</option>
-                        <option value="Cf">Cf (Confezioni)</option>
-                        <option value="Sc">Sc (Scatole)</option>
-                        <option value="Pacco">Pacco</option>
-                        <option value="Rotolo">Rotolo</option>
-                        <option value="Mt">Mt (Metri)</option>
-                        <option value="Altro">Altro</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="fornitore">Fornitore (opzionale)</label>
-                    <input type="text" id="fornitore" placeholder="Es: MARR, FOPPA, Woerndle...">
-                </div>
-
-                <div class="form-group">
-                    <label for="note">Note (opzionale)</label>
-                    <textarea id="note" placeholder="Aggiungi dettagli aggiuntivi..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="urgenza">Urgenza *</label>
-                    <select id="urgenza" required>
-                        <option value="">Seleziona urgenza...</option>
-                        <option value="Urgente">🔴 Urgente</option>
-                        <option value="Per stagione in corso">🟡 Per stagione in corso</option>
-                        <option value="Fuori stagione">🟢 Fuori stagione</option>
-                    </select>
-                </div>
-
-                <div class="photo-section">
-                    <label>📷 Foto Allegate</label>
-                    <div class="photo-buttons">
-                        <button type="button" class="btn btn-camera" onclick="openCamera()">
-                            📸 Scatta Foto
-                        </button>
-                        <button type="button" class="btn btn-gallery" onclick="openGallery()">
-                            🖼️ Galleria
-                        </button>
-                    </div>
-                    <input type="file" id="cameraInput" accept="image/*" capture="environment" multiple onchange="handlePhotos(event)">
-                    <input type="file" id="galleryInput" accept="image/*" multiple onchange="handlePhotos(event)">
-                    <div id="photosPreview" class="photos-preview"></div>
-                    <div id="photoCount" class="photo-count"></div>
-                </div>
-
-                <button type="submit" class="btn btn-submit">✓ Aggiungi Ordine</button>
-            </form>
-
-            <div class="orders-list" id="ordersList">
-                <h2>Ordini Inseriti</h2>
-                <div id="ordersContainer"></div>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button type="button" class="btn btn-export" onclick="exportAllOrders()" style="display: none; flex: 1;" id="exportBtn">
-                        📤 Esporta Tutti gli Ordini
-                    </button>
-                    <button type="button" class="btn btn-delete" onclick="deleteAllOrders()" style="display: none; flex: 1;" id="deleteAllBtn">
-                        🗑️ Cancella Tutti gli Ordini
-                    </button>
-                </div>
-            </div>
+        <div class="form-group">
+          <label for="descrizione">Descrizione articolo *</label>
+          <input type="text" id="descrizione" required placeholder="Es: Tovaglioli bianchi 40x40">
         </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="quantita">Quantità *</label>
+            <input type="number" id="quantita" required min="1" placeholder="50">
+          </div>
+          <div class="form-group">
+            <label for="unita">Unità *</label>
+            <select id="unita" required>
+              <option value="">Seleziona...</option>
+              <option value="Pz">Pz</option>
+              <option value="Kg">Kg</option>
+              <option value="Lt">Lt</option>
+              <option value="Cf">Cf</option>
+              <option value="Sc">Sc</option>
+              <option value="Pacco">Pacco</option>
+              <option value="Rotolo">Rotolo</option>
+              <option value="Mt">Mt</option>
+              <option value="Altro">Altro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fornitore">Fornitore (opzionale)</label>
+          <input type="text" id="fornitore" placeholder="Es: MARR, Foppa, Woerndle...">
+        </div>
+
+        <div class="form-group">
+          <label for="note">Note (opzionali)</label>
+          <textarea id="note" placeholder="Dettagli aggiuntivi..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="urgenza">Urgenza</label>
+          <select id="urgenza">
+            <option value="Normale">Normale</option>
+            <option value="Alta">Alta</option>
+            <option value="Critica">Critica</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="completamento">Avanzamento *</label>
+          <select id="completamento" required>
+            <option value="0">0% - Da fare</option>
+            <option value="50">50% - Ordinato</option>
+            <option value="100">100% - Consegnato</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Foto articolo</label>
+          <div class="btn-row">
+            <button type="button" class="btn-outline btn-small" onclick="document.getElementById('photoInput').click()">
+              📷 Carica foto
+            </button>
+          </div>
+          <input id="photoInput" type="file" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
+          <div class="photos-preview" id="photosPreview"></div>
+          <div class="photo-count" id="photoCount"></div>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn-primary">
+            ✓ Salva ordine
+          </button>
+        </div>
+      </form>
     </div>
 
-    <script>
-        let photos = [];
-        let orders = [];
+    <!-- LISTA ORDINI -->
+    <div class="card">
+      <div class="orders-header">
+        <h2><span class="emoji">📋</span> Ordini inseriti</h2>
+        <div class="orders-actions">
+          <div class="filter-group">
+            <span>Filtra per completamento:</span>
+            <select id="filterCompletion" onchange="displayOrders()">
+              <option value="all">Tutti</option>
+              <option value="0">0% - Da fare</option>
+              <option value="50">50% - Ordinato</option>
+              <option value="100">100% - Consegnato</option>
+            </select>
+          </div>
 
-        // Carica ordini salvati
-        window.onload = function() {
-            const savedOrders = localStorage.getItem('orders');
-            if (savedOrders) {
-                orders = JSON.parse(savedOrders);
-                displayOrders();
-            }
-        };
+          <button type="button" class="btn-secondary btn-small" onclick="document.getElementById('importFile').click()">
+            ⬆️ Importa JSON
+          </button>
+          <input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importOrders(event)">
 
-        function openCamera() {
-            document.getElementById('cameraInput').click();
-        }
+          <button type="button" class="btn-secondary btn-small" onclick="exportOrders()">
+            ⬇️ Esporta JSON
+          </button>
 
-        function openGallery() {
-            document.getElementById('galleryInput').click();
-        }
+          <button type="button" class="btn-danger btn-small" onclick="deleteAllOrders()">
+            🗑️ Cancella tutto
+          </button>
+        </div>
+      </div>
 
-        function handlePhotos(event) {
-            const files = Array.from(event.target.files);
-            
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    photos.push({
-                        data: e.target.result,
-                        name: file.name
-                    });
-                    displayPhotos();
-                };
-                reader.readAsDataURL(file);
-            });
+      <div id="ordersContainer" class="orders-container"></div>
+    </div>
+  </div>
+</div>
 
-            // Reset input
-            event.target.value = '';
-        }
+<div id="alert" class="alert"></div>
 
-        function displayPhotos() {
-            const preview = document.getElementById('photosPreview');
-            const count = document.getElementById('photoCount');
-            
-            preview.innerHTML = '';
-            photos.forEach((photo, index) => {
-                const photoDiv = document.createElement('div');
-                photoDiv.className = 'photo-item';
-                photoDiv.innerHTML = `
-                    <img src="${photo.data}" alt="Foto ${index + 1}">
-                    <button class="photo-remove" onclick="removePhoto(${index})">×</button>
-                `;
-                preview.appendChild(photoDiv);
-            });
+<script>
+  let photos = [];
+  let orders = [];
 
-            count.textContent = photos.length > 0 ? `${photos.length} foto allegate` : '';
-        }
+  // Carica ordini dal localStorage all'avvio
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem('orders_avanzamento');
+    if (saved) {
+      try {
+        orders = JSON.parse(saved) || [];
+      } catch (e) {
+        orders = [];
+      }
+    }
+    // normalizza eventuali ordini vecchi senza completamento/foto
+    orders.forEach(o => {
+      if (typeof o.completamento === 'undefined' || o.completamento === null) {
+        o.completamento = 0;
+      }
+      if (!Array.isArray(o.photos)) {
+        o.photos = [];
+      }
+    });
+    displayOrders();
+  });
 
-        function removePhoto(index) {
-            photos.splice(index, 1);
-            displayPhotos();
-        }
+  function saveOrders() {
+    localStorage.setItem('orders_avanzamento', JSON.stringify(orders));
+  }
 
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+  // Gestione foto
+  function handlePhotos(event) {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
 
-            const order = {
-                id: Date.now(),
-                struttura: document.getElementById('struttura').value,
-                reparto: document.getElementById('reparto').value,
-                descrizione: document.getElementById('descrizione').value,
-                quantita: document.getElementById('quantita').value,
-                unita: document.getElementById('unita').value,
-                fornitore: document.getElementById('fornitore').value,
-                note: document.getElementById('note').value,
-                urgenza: document.getElementById('urgenza').value,
-                photos: [...photos],
-                data: new Date().toLocaleString('it-IT')
-            };
+    let remaining = files.length;
 
-            orders.push(order);
-            saveOrders();
-            displayOrders();
-            showAlert('Ordine aggiunto con successo!');
-
-            // Reset form
-            this.reset();
-            photos = [];
-            displayPhotos();
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        photos.push({
+          name: file.name,
+          data: e.target.result
         });
-
-        function saveOrders() {
-            localStorage.setItem('orders', JSON.stringify(orders));
+        remaining--;
+        if (remaining === 0) {
+          displayPhotos();
         }
+      };
+      reader.readAsDataURL(file);
+    });
 
-        function displayOrders() {
-            const container = document.getElementById('ordersContainer');
-            const exportBtn = document.getElementById('exportBtn');
-            const deleteAllBtn = document.getElementById('deleteAllBtn');
+    event.target.value = "";
+  }
 
-            if (orders.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun ordine inserito</p>';
-                exportBtn.style.display = 'none';
-                deleteAllBtn.style.display = 'none';
-                return;
-            }
+  function displayPhotos() {
+    const preview = document.getElementById('photosPreview');
+    const count = document.getElementById('photoCount');
+    preview.innerHTML = photos.map(p => `<img src="${p.data}" alt="foto">`).join('');
+    count.textContent = photos.length
+      ? `${photos.length} foto allegate all'ordine`
+      : '';
+  }
 
-            exportBtn.style.display = 'block';
-            deleteAllBtn.style.display = 'block';
-            container.innerHTML = orders.map((order, index) => `
-                <div class="order-card">
-                    <h3>${order.descrizione}</h3>
-                    <div class="order-info"><strong>Struttura:</strong> ${order.struttura}</div>
-                    <div class="order-info"><strong>Reparto:</strong> ${order.reparto}</div>
-                    <div class="order-info"><strong>Quantità:</strong> ${order.quantita} ${order.unita}</div>
-                    ${order.fornitore ? `<div class="order-info"><strong>Fornitore:</strong> ${order.fornitore}</div>` : ''}
-                    <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
-                    ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
-                    <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
-                    <div class="order-info"><strong>Data:</strong> ${order.data}</div>
-                    ${order.photos.length > 0 ? `
-                        <div class="order-photos-preview">
-                            ${order.photos.map((photo, i) => `
-                                <img src="${photo.data}" alt="Foto ${i + 1}" class="order-photo-thumb">
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                    <div class="order-actions">
-                        <button class="btn btn-small btn-export" onclick="exportOrder(${index})">📤 Esporta</button>
-                        <button class="btn btn-small btn-delete" onclick="deleteOrder(${index})">🗑️ Elimina</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+  // Aggiunta nuovo ordine
+  document.getElementById('orderForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-        function deleteOrder(index) {
-            if (confirm('Sei sicuro di voler eliminare questo ordine?')) {
-                orders.splice(index, 1);
-                saveOrders();
-                displayOrders();
-                showAlert('Ordine eliminato', 'warning');
-            }
-        }
+    const struttura    = document.getElementById('struttura').value.trim();
+    const reparto      = document.getElementById('reparto').value.trim();
+    const descrizione  = document.getElementById('descrizione').value.trim();
+    const quantita     = parseFloat(document.getElementById('quantita').value);
+    const unita        = document.getElementById('unita').value;
+    const fornitore    = document.getElementById('fornitore').value.trim();
+    const note         = document.getElementById('note').value.trim();
+    const urgenza      = document.getElementById('urgenza').value;
+    const completamento = parseInt(document.getElementById('completamento').value, 10);
 
-        function deleteAllOrders() {
-            if (confirm('⚠️ ATTENZIONE: Sei sicuro di voler cancellare TUTTI gli ordini?\n\nQuesta operazione non può essere annullata!')) {
-                if (confirm('Confermi di voler eliminare tutti i ' + orders.length + ' ordini?')) {
-                    orders = [];
-                    saveOrders();
-                    displayOrders();
-                    showAlert('Tutti gli ordini sono stati cancellati', 'warning');
-                }
-            }
-        }
+    if (!struttura || !reparto || !descrizione || !quantita || !unita) {
+      showAlert("Compila tutti i campi obbligatori", true);
+      return;
+    }
 
-        function exportOrder(index) {
-            const order = orders[index];
-            generateOrderHTML(order, `ordine_${order.reparto}_${order.id}.html`);
-        }
+    const ordine = {
+      id: Date.now(),
+      struttura,
+      reparto,
+      descrizione,
+      quantita,
+      unita,
+      fornitore,
+      note,
+      urgenza,
+      completamento,
+      photos: [...photos],
+      data: new Date().toLocaleString('it-IT')
+    };
 
-        function exportAllOrders() {
-            if (orders.length === 0) return;
+    orders.push(ordine);
+    saveOrders();
+    displayOrders();
+    showAlert("Ordine salvato");
 
-            const allOrdersHTML = generateAllOrdersHTML(orders);
-            const blob = new Blob([allOrdersHTML], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ordini_completi_${new Date().toISOString().split('T')[0]}.html`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showAlert('Tutti gli ordini esportati con successo!');
-        }
+    // reset form + foto
+    this.reset();
+    document.getElementById('completamento').value = "0";
+    photos = [];
+    displayPhotos();
+  });
 
-        function generateOrderHTML(order, filename) {
-            const html = `
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordine - ${order.reparto}</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
-        .header { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
-        .info-row { margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
-        .label { font-weight: bold; color: #333; }
-        .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-        .photos img { width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        @media print { .no-print { display: none; } }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>📦 Ordine Reparto</h1>
-        <p>Hotel Antares - Selva Gardena</p>
-    </div>
-    
-    <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
-    <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
-    <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
-    <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
-    ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
-    <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
-    ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
-    <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
-    
-    ${order.photos.length > 0 ? `
-        <h2>Foto Allegate (${order.photos.length})</h2>
-        <div class="photos">
-            ${order.photos.map((photo, i) => `<img src="${photo.data}" alt="Foto ${i + 1}">`).join('')}
-        </div>
-    ` : ''}
-    
-    <div class="no-print" style="margin-top: 30px; text-align: center;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">🖨️ Stampa</button>
-    </div>
-</body>
-</html>`;
+  function completionLabel(val) {
+    const n = parseInt(val, 10);
+    if (n === 0) return "0% - Da fare";
+    if (n === 50) return "50% - Ordinato";
+    if (n === 100) return "100% - Consegnato";
+    return n + "%";
+  }
 
-            const blob = new Blob([html], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-            showAlert('Ordine esportato con successo!');
-        }
+  function completionClass(val) {
+    const n = parseInt(val, 10);
+    if (n === 0) return "comp-0";
+    if (n === 50) return "comp-50";
+    if (n === 100) return "comp-100";
+    return "";
+  }
 
-        function generateAllOrdersHTML(orders) {
-            return `
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutti gli Ordini</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 20px; }
-        .header { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; text-align: center; }
-        .order-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 30px; page-break-inside: avoid; }
-        .order-header { background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
-        .info-row { margin: 10px 0; }
-        .label { font-weight: bold; color: #333; }
-        .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
-        .photos img { width: 100%; border-radius: 5px; }
-        @media print { .no-print { display: none; } }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>📦 Riepilogo Ordini Reparti</h1>
-        <p>Hotel Antares - Selva Gardena</p>
-        <p>Totale ordini: ${orders.length}</p>
-    </div>
-    
-    ${orders.map((order, i) => `
+  // Maschera/filtri + render ordini
+  function displayOrders() {
+    const container = document.getElementById('ordersContainer');
+    const filterValue = document.getElementById('filterCompletion').value;
+
+    if (!orders.length) {
+      container.innerHTML = `<div class="no-orders">Nessun ordine inserito</div>`;
+      return;
+    }
+
+    const filtered = orders.filter(o => {
+      if (filterValue === 'all') return true;
+      return String(o.completamento) === filterValue;
+    });
+
+    if (!filtered.length) {
+      container.innerHTML = `<div class="no-orders">Nessun ordine con questo livello di completamento</div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(o => {
+      const originalIndex = orders.findIndex(x => x.id === o.id);
+      const compVal = o.completamento ?? 0;
+      const compClass = completionClass(compVal);
+      const compText = completionLabel(compVal);
+
+      return `
         <div class="order-card">
-            <div class="order-header">
-                <h2>Ordine #${i + 1} - ${order.struttura} - ${order.reparto}</h2>
+          <div class="order-main">
+            <div class="order-title">
+              <span>${o.descrizione}</span>
             </div>
-            <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
-            <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
-            <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
-            <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
-            ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
-            <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
-            ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
-            <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
-            ${order.photos.length > 0 ? `
-                <div class="info-row"><span class="label">Foto Allegate:</span> ${order.photos.length}</div>
-                <div class="photos">
-                    ${order.photos.map((photo, j) => `<img src="${photo.data}" alt="Foto ${j + 1}">`).join('')}
-                </div>
-            ` : ''}
-        </div>
-    `).join('')}
-    
-    <div class="no-print" style="margin-top: 30px; text-align: center;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">🖨️ Stampa Tutto</button>
-    </div>
-</body>
-</html>`;
-        }
+            <div class="order-tags">
+              <span class="tag tag-struct">${o.struttura}</span>
+              <span class="tag tag-reparto">${o.reparto}</span>
+              <span class="tag tag-urg">Urgenza: ${o.urgenza || "Normale"}</span>
+            </div>
+            <div class="order-line">
+              <span class="label">Quantità:</span> ${o.quantita} ${o.unita}
+            </div>
+            ${o.fornitore ? `
+              <div class="order-line">
+                <span class="label">Fornitore:</span> ${o.fornitore}
+              </div>` : ''
+            }
+            ${o.note ? `
+              <div class="order-line">
+                <span class="label">Note:</span> ${o.note}
+              </div>` : ''
+            }
+            <div class="order-meta">
+              Inserito il ${o.data || ""}
+            </div>
+          </div>
 
-        function showAlert(message, type = 'success') {
-            const alert = document.getElementById('alert');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            alert.style.display = 'block';
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 3000);
+          <div class="order-side">
+            <div class="completion-block">
+              <span>Completamento</span>
+              <select class="completion-select"
+                      onchange="updateCompletion(${originalIndex}, this.value)">
+                <option value="0"  ${compVal === 0  ? "selected" : ""}>0% - Da fare</option>
+                <option value="50" ${compVal === 50 ? "selected" : ""}>50% - Ordinato</option>
+                <option value="100" ${compVal === 100 ? "selected" : ""}>100% - Consegnato</option>
+              </select>
+              <span class="completion-pill ${compClass}">
+                ${compText}
+              </span>
+            </div>
+
+            <div class="order-photos-inline">
+              ${Array.isArray(o.photos) && o.photos.length
+                ? o.photos.map(p => `<img src="${p.data}" alt="foto ordine">`).join('')
+                : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateCompletion(index, value) {
+    const val = parseInt(value, 10);
+    if (index < 0 || index >= orders.length) return;
+    orders[index].completamento = val;
+    saveOrders();
+    displayOrders();
+  }
+
+  // Esporta JSON
+  function exportOrders() {
+    if (!orders.length) {
+      showAlert("Non ci sono ordini da esportare", true);
+      return;
+    }
+    const blob = new Blob([JSON.stringify(orders, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const ts = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `ordini_hotel_${ts}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Importa JSON
+  function importOrders(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) {
+          throw new Error("Il file non contiene una lista di ordini");
         }
-    </script>
+        data.forEach(o => {
+          if (!o.id) o.id = Date.now() + Math.random();
+          if (typeof o.completamento === 'undefined' || o.completamento === null) {
+            o.completamento = 0;
+          }
+          if (!Array.isArray(o.photos)) {
+            o.photos = [];
+          }
+        });
+        orders = data;
+        saveOrders();
+        displayOrders();
+        showAlert("Ordini importati correttamente");
+      } catch (err) {
+        console.error(err);
+        showAlert("Errore nell'importazione: " + err.message, true);
+      } finally {
+        event.target.value = "";
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // Cancella tutti gli ordini
+  function deleteAllOrders() {
+    if (!orders.length) return;
+    const ok = confirm("Vuoi veramente cancellare tutti gli ordini?");
+    if (!ok) return;
+    orders = [];
+    saveOrders();
+    displayOrders();
+    showAlert("Tutti gli ordini sono stati cancellati");
+  }
+
+  // Notifica
+  function showAlert(message, isError) {
+    const alert = document.getElementById('alert');
+    alert.textContent = message;
+    alert.classList.toggle('error', !!isError);
+    alert.style.display = 'block';
+    setTimeout(() => {
+      alert.style.display = 'none';
+    }, 2500);
+  }
+</script>
 </body>
 </html>
