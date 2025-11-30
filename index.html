@@ -397,9 +397,14 @@
             <div class="orders-list" id="ordersList">
                 <h2>Ordini Inseriti</h2>
                 <div id="ordersContainer"></div>
-                <button type="button" class="btn btn-export" onclick="exportAllOrders()" style="margin-top: 15px; display: none;" id="exportBtn">
-                    📤 Esporta Tutti gli Ordini
-                </button>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-export" onclick="exportAllOrders()" style="display: none; flex: 1;" id="exportBtn">
+                        📤 Esporta Tutti gli Ordini
+                    </button>
+                    <button type="button" class="btn btn-delete" onclick="deleteAllOrders()" style="display: none; flex: 1;" id="deleteAllBtn">
+                        🗑️ Cancella Tutti gli Ordini
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -502,14 +507,17 @@
         function displayOrders() {
             const container = document.getElementById('ordersContainer');
             const exportBtn = document.getElementById('exportBtn');
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
 
             if (orders.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #999;">Nessun ordine inserito</p>';
                 exportBtn.style.display = 'none';
+                deleteAllBtn.style.display = 'none';
                 return;
             }
 
             exportBtn.style.display = 'block';
+            deleteAllBtn.style.display = 'block';
             container.innerHTML = orders.map((order, index) => `
                 <div class="order-card">
                     <h3>${order.descrizione}</h3>
@@ -542,6 +550,17 @@
                 saveOrders();
                 displayOrders();
                 showAlert('Ordine eliminato', 'warning');
+            }
+        }
+
+        function deleteAllOrders() {
+            if (confirm('⚠️ ATTENZIONE: Sei sicuro di voler cancellare TUTTI gli ordini?\n\nQuesta operazione non può essere annullata!')) {
+                if (confirm('Confermi di voler eliminare tutti i ' + orders.length + ' ordini?')) {
+                    orders = [];
+                    saveOrders();
+                    displayOrders();
+                    showAlert('Tutti gli ordini sono stati cancellati', 'warning');
+                }
             }
         }
 
