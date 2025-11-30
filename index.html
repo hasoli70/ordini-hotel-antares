@@ -360,23 +360,6 @@
         .btn-status.active {
             outline: 2px solid rgba(0,0,0,0.2);
         }
-
-        /* Filtro per stato */
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .filter-bar label {
-            margin-bottom: 0;
-        }
-
-        .filter-select {
-            min-width: 180px;
-        }
     </style>
 </head>
 <body>
@@ -481,18 +464,6 @@
 
             <div class="orders-list" id="ordersList">
                 <h2>Ordini Inseriti</h2>
-
-                <!-- MASCHERA FILTRO STATO -->
-                <div class="filter-bar">
-                    <label for="filtroStato">Filtra per stato:</label>
-                    <select id="filtroStato" class="filter-select" onchange="changeFilterStatus(this.value)">
-                        <option value="all">Tutti</option>
-                        <option value="0">0% - Da fare</option>
-                        <option value="50">50% - Ordinato</option>
-                        <option value="100">100% - Consegnato</option>
-                    </select>
-                </div>
-
                 <div id="ordersContainer"></div>
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <button type="button" class="btn btn-export" onclick="exportAllOrders()" style="display: none; flex: 1;" id="exportBtn">
@@ -509,7 +480,6 @@
     <script>
         let photos = [];
         let orders = [];
-        let filterStatus = 'all'; // all, 0, 50, 100
 
         function getStatusLabel(stato) {
             const s = Number(stato);
@@ -537,6 +507,7 @@
                 orders = orders.map(o => ({
                     ...o,
                     stato: (typeof o.stato === 'undefined' || o.stato === null) ? 0 : o.stato
+                    // o.ora può non esserci per ordini vecchi: in quel caso resta undefined
                 }));
 
                 saveOrders();
@@ -597,6 +568,10 @@
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const now = new Date();
+            const data = now.toLocaleDateString('it-IT');
+            const ora = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+
             const order = {
                 id: Date.now(),
                 struttura: document.getElementById('struttura').value,
@@ -608,7 +583,8 @@
                 note: document.getElementById('note').value,
                 urgenza: document.getElementById('urgenza').value,
                 photos: [...photos],
-                data: new Date().toLocaleString('it-IT'),
+                data: data,   // solo data
+                ora: ora,     // solo orario
                 // Nuovo campo: stato avanzamento (0, 50, 100)
                 stato: 0
             };
@@ -628,11 +604,6 @@
             localStorage.setItem('orders', JSON.stringify(orders));
         }
 
-        function changeFilterStatus(value) {
-            filterStatus = value;
-            displayOrders();
-        }
-
         function displayOrders() {
             const container = document.getElementById('ordersContainer');
             const exportBtn = document.getElementById('exportBtn');
@@ -645,25 +616,9 @@
                 return;
             }
 
-            // Applica filtro per stato
-            const visibleOrders = orders.filter(order => {
-                if (filterStatus === 'all') return true;
-                return Number(order.stato) === Number(filterStatus);
-            });
-
             exportBtn.style.display = 'block';
             deleteAllBtn.style.display = 'block';
-
-            if (visibleOrders.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun ordine con questo stato di completamento</p>';
-                return;
-            }
-
-            container.innerHTML = visibleOrders.map((order, index) => {
-                // indexVisuale: dobbiamo usare l'indice reale per update/delete
-                const realIndex = orders.findIndex(o => o.id === order.id);
-
-                return `
+            container.innerHTML = orders.map((order, index) => `
                 <div class="order-card">
                     <h3>${order.descrizione}</h3>
                     <div class="order-info"><strong>Struttura:</strong> ${order.struttura}</div>
@@ -673,7 +628,8 @@
                     <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
                     ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
                     <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
-                    <div class="order-info"><strong>Data:</strong> ${order.data}</div>
+                    <div class="order-info"><strong>Data:</strong> ${order.data || ''}</div>
+                    ${order.ora ? `<div class="order-info"><strong>Ora:</strong> ${order.ora}</div>` : ''}
 
                     <div class="order-info">
                         <strong>Stato:</strong>
@@ -686,19 +642,19 @@
                         <div class="status-buttons">
                             <button
                                 class="btn-status btn-status-0 ${Number(order.stato) === 0 ? 'active' : ''}"
-                                onclick="updateStatus(${realIndex}, 0)"
+                                onclick="updateStatus(${index}, 0)"
                                 type="button">
                                 0% Da fare
                             </button>
                             <button
                                 class="btn-status btn-status-50 ${Number(order.stato) === 50 ? 'active' : ''}"
-                                onclick="updateStatus(${realIndex}, 50)"
+                                onclick="updateStatus(${index}, 50)"
                                 type="button">
                                 50% Ordinato
                             </button>
                             <button
                                 class="btn-status btn-status-100 ${Number(order.stato) === 100 ? 'active' : ''}"
-                                onclick="updateStatus(${realIndex}, 100)"
+                                onclick="updateStatus(${index}, 100)"
                                 type="button">
                                 100% Consegnato
                             </button>
@@ -706,8 +662,8 @@
                     </div>
 
                     <div class="order-actions" style="margin-top: 8px;">
-                        <button class="btn btn-small btn-export" onclick="exportOrder(${realIndex})">📤 Esporta</button>
-                        <button class="btn btn-small btn-delete" onclick="deleteOrder(${realIndex})">🗑️ Elimina</button>
+                        <button class="btn btn-small btn-export" onclick="exportOrder(${index})">📤 Esporta</button>
+                        <button class="btn btn-small btn-delete" onclick="deleteOrder(${index})">🗑️ Elimina</button>
                     </div>
 
                     ${order.photos.length > 0 ? `
@@ -718,19 +674,16 @@
                         </div>
                     ` : ''}
                 </div>
-            `;
-            }).join('');
+            `).join('');
         }
 
         function updateStatus(index, value) {
-            if (index < 0 || index >= orders.length) return;
             orders[index].stato = value;
             saveOrders();
             displayOrders();
         }
 
         function deleteOrder(index) {
-            if (index < 0 || index >= orders.length) return;
             if (confirm('Sei sicuro di voler eliminare questo ordine?')) {
                 orders.splice(index, 1);
                 saveOrders();
@@ -740,7 +693,6 @@
         }
 
         function deleteAllOrders() {
-            if (orders.length === 0) return;
             if (confirm('⚠️ ATTENZIONE: Sei sicuro di voler cancellare TUTTI gli ordini?\n\nQuesta operazione non può essere annullata!')) {
                 if (confirm('Confermi di voler eliminare tutti i ' + orders.length + ' ordini?')) {
                     orders = [];
@@ -753,7 +705,6 @@
 
         function exportOrder(index) {
             const order = orders[index];
-            if (!order) return;
             generateOrderHTML(order, `ordine_${order.reparto}_${order.id}.html`);
         }
 
@@ -802,7 +753,8 @@
     ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
     <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
     ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
-    <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
+    <div class="info-row"><span class="label">Data:</span> ${order.data || ''}</div>
+    ${order.ora ? `<div class="info-row"><span class="label">Ora:</span> ${order.ora}</div>` : ''}
     <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
     
     ${order.photos.length > 0 ? `
@@ -867,7 +819,8 @@
             ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
             <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
             ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
-            <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
+            <div class="info-row"><span class="label">Data:</span> ${order.data || ''}</div>
+            ${order.ora ? `<div class="info-row"><span class="label">Ora:</span> ${order.ora}</div>` : ''}
             <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
             ${order.photos.length > 0 ? `
                 <div class="info-row"><span class="label">Foto Allegate:</span> ${order.photos.length}</div>
