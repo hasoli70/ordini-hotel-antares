@@ -624,13 +624,6 @@
                     <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
                     <div class="order-info"><strong>Data:</strong> ${order.data}</div>
 
-                    <div class="order-info">
-                        <strong>Stato:</strong>
-                        <span class="status-badge ${getStatusClass(order.stato)}">
-                            ${getStatusLabel(order.stato)}
-                        </span>
-                    </div>
-
                     <div class="order-actions">
                         <button class="btn btn-small btn-export" onclick="exportOrder(${index})">📤 Esporta</button>
                         <button class="btn btn-small btn-delete" onclick="deleteOrder(${index})">🗑️ Elimina</button>
@@ -728,7 +721,6 @@
     <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
     ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
     <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
-    <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
     
     ${order.photos.length > 0 ? `
         <h2>Foto Allegate (${order.photos.length})</h2>
@@ -793,7 +785,6 @@
             <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
             ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
             <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
-            <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
             ${order.photos.length > 0 ? `
                 <div class="info-row"><span class="label">Foto Allegate:</span> ${order.photos.length}</div>
                 <div class="photos">
