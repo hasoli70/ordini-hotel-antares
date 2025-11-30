@@ -698,7 +698,9 @@
 
         function exportOrder(index) {
             const order = orders[index];
-            generateOrderHTML(order, `ordine_${order.reparto}_${order.id}.html`);
+            const now = new Date();
+            const timestamp = `${now.toISOString().split('T')[0]}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
+            generateOrderHTML(order, `ordine_${order.reparto}_${order.id}_${timestamp}.html`);
         }
 
         function exportAllOrders() {
@@ -709,7 +711,9 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `ordini_completi_${new Date().toISOString().split('T')[0]}.html`;
+            const now = new Date();
+            const timestamp = `${now.toISOString().split('T')[0]}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
+            a.download = `ordini_completi_${timestamp}.html`;
             a.click();
             URL.revokeObjectURL(url);
             showAlert('Tutti gli ordini esportati con successo!');
