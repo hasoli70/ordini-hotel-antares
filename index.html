@@ -1,464 +1,843 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Gestione Completamento Ordini</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      color: #9ca3af;
-      margin-bottom: 20px;
-    }
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-      align-items: center;
-    }
-    .toolbar-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    label {
-      font-size: 0.9rem;
-    }
-    select, input[type="file"], button {
-      font-size: 0.9rem;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid #4b5563;
-      background: #111827;
-      color: #e5e7eb;
-    }
-    button {
-      cursor: pointer;
-      border: none;
-      background: #2563eb;
-      transition: background 0.15s;
-    }
-    button:hover {
-      background: #1d4ed8;
-    }
-    button.secondary {
-      background: #374151;
-    }
-    button.secondary:hover {
-      background: #4b5563;
-    }
-    .orders-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .order-card {
-      background: #111827;
-      border-radius: 12px;
-      padding: 14px;
-      border: 1px solid #1f2937;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .order-title {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #f9fafb;
-    }
-    .order-meta {
-      font-size: 0.8rem;
-      color: #9ca3af;
-    }
-    .badge {
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .badge-0 { background: #7f1d1d; color: #fecaca; }
-    .badge-50 { background: #78350f; color: #fef3c7; }
-    .badge-100 { background: #14532d; color: #bbf7d0; }
-    .info-row {
-      font-size: 0.8rem;
-      color: #d1d5db;
-    }
-    .info-label {
-      font-weight: 600;
-      color: #9ca3af;
-      margin-right: 4px;
-    }
-    .photos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: 6px;
-      margin-top: 4px;
-    }
-    .photos img {
-      width: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-      aspect-ratio: 1;
-      border: 1px solid #1f2937;
-    }
-    .completion-row {
-      margin-top: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-    }
-    .status-text {
-      font-size: 0.8rem;
-      color: #9ca3af;
-    }
-    .saved-banner {
-      margin-top: 10px;
-      font-size: 0.8rem;
-      color: #22c55e;
-      display: none;
-    }
-    .empty-message {
-      margin-top: 30px;
-      text-align: center;
-      color: #9ca3af;
-      font-size: 0.95rem;
-    }
-    .small {
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordini Reparti - Hotel Antares</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .photo-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .photo-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-camera {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-camera:hover {
+            background: #45a049;
+        }
+
+        .btn-gallery {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-gallery:hover {
+            background: #0b7dda;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .photos-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-count {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .orders-list {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .orders-list h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .order-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .order-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .order-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .order-info strong {
+            color: #333;
+        }
+
+        .order-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-export {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .order-photos-preview {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+
+        .order-photo-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        @media (max-width: 480px) {
+            .photo-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* --- STATO AVANZAMENTO --- */
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-0 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-50 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-100 {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-buttons {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn-status {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 12px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+        }
+
+        .btn-status-0 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-status-50 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .btn-status-100 {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .btn-status:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            opacity: 0.95;
+        }
+
+        .btn-status.active {
+            outline: 2px solid rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>📦 Gestione Completamento Ordini</h1>
-  <p class="subtitle">
-    Importa il file HTML degli ordini (con le foto) e indica lo stato:
-    0% = nulla fatto · 50% = ordinato · 100% = consegnato.
-  </p>
-
-  <div class="toolbar">
-    <div class="toolbar-group">
-      <label for="htmlInput">File ordini (HTML):</label>
-      <input type="file" id="htmlInput" accept=".htm,.html">
-    </div>
-
-    <div class="toolbar-group">
-      <label for="filterCompletion">Filtro completamento:</label>
-      <select id="filterCompletion">
-        <option value="all">Tutti</option>
-        <option value="0">Solo 0% - Da fare</option>
-        <option value="50">Solo 50% - Ordinato</option>
-        <option value="100">Solo 100% - Consegnato</option>
-      </select>
-    </div>
-
-    <div class="toolbar-group">
-      <button id="exportCsvBtn" class="secondary">⬇️ Esporta CSV</button>
-      <button id="clearBtn" class="secondary">🗑️ Svuota memoria</button>
-    </div>
-  </div>
-
-  <p class="small">
-    I completamenti sono salvati nel browser (localStorage). Puoi chiudere e riaprire questa pagina: i dati restano.
-  </p>
-
-  <div id="savedBanner" class="saved-banner">✅ Completamento salvato.</div>
-
-  <div id="ordersContainer" class="orders-grid"></div>
-  <div id="emptyMessage" class="empty-message" style="display:none;">
-    Nessun ordine caricato. Importa un file HTML di ordini per iniziare.
-  </div>
-</div>
-
-<script>
-  // Struttura interna: [{ id, titolo, struttura, reparto, descrizione, data, photos[], completamento }]
-  let orders = [];
-
-  const STORAGE_KEY = 'ordiniCompletamento_v1';
-
-  const htmlInput = document.getElementById('htmlInput');
-  const filterSelect = document.getElementById('filterCompletion');
-  const container = document.getElementById('ordersContainer');
-  const emptyMessage = document.getElementById('emptyMessage');
-  const savedBanner = document.getElementById('savedBanner');
-  const exportCsvBtn = document.getElementById('exportCsvBtn');
-  const clearBtn = document.getElementById('clearBtn');
-
-  // ------------ Persistenza ------------
-
-  function saveOrders() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-      showSavedBanner();
-    } catch (e) {
-      console.error('Errore nel salvataggio:', e);
-    }
-  }
-
-  function loadOrders() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        orders = parsed;
-      }
-    } catch (e) {
-      console.error('Errore nel caricamento:', e);
-    }
-  }
-
-  function showSavedBanner() {
-    savedBanner.style.display = 'block';
-    clearTimeout(showSavedBanner._timer);
-    showSavedBanner._timer = setTimeout(() => {
-      savedBanner.style.display = 'none';
-    }, 1000);
-  }
-
-  // ------------ Import HTML ordini ------------
-
-  htmlInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result;
-      parseOrdersFromHtml(text);
-      saveOrders();
-      renderOrders();
-    };
-    reader.readAsText(file, 'utf-8');
-  });
-
-  function parseOrdersFromHtml(htmlText) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, 'text/html');
-
-    const cards = doc.querySelectorAll('.order-card');
-    if (!cards.length) {
-      alert('Nel file non ho trovato card con classe ".order-card".');
-      return;
-    }
-
-    const newOrders = [];
-    cards.forEach((card, idx) => {
-      const headerEl = card.querySelector('h2, h3, .order-header h2, .order-header h3');
-      const titolo = headerEl ? headerEl.textContent.trim() : `Ordine #${idx + 1}`;
-
-      let struttura = '';
-      let reparto = '';
-      let descrizione = '';
-      let data = '';
-
-      const rows = card.querySelectorAll('.info-row');
-      rows.forEach(row => {
-        const labelSpan = row.querySelector('.label, .info-label, span');
-        if (!labelSpan) return;
-        let label = labelSpan.textContent.trim().toLowerCase().replace(':', '');
-        const fullText = row.textContent.trim();
-        const value = fullText.replace(labelSpan.textContent, '').replace(':', '').trim();
-
-        if (label.includes('struttura')) struttura = value;
-        else if (label.includes('reparto')) reparto = value;
-        else if (label.includes('descrizione')) descrizione = value;
-        else if (label.includes('data')) data = value;
-      });
-
-      const photoEls = card.querySelectorAll('img');
-      const photos = Array.from(photoEls).map(img => img.src);
-
-      // chiave semistabile per non perdere i completamenti tra import successivi
-      const key = `${struttura}|${reparto}|${descrizione}|${data}|${photos.length}`;
-
-      // se esiste già in memoria, recupero il completamento
-      const existing = orders.find(o => o.key === key);
-
-      newOrders.push({
-        id: idx + 1,
-        key,
-        titolo,
-        struttura,
-        reparto,
-        descrizione,
-        data,
-        photos,
-        completamento: existing ? existing.completamento : 0
-      });
-    });
-
-    orders = newOrders;
-  }
-
-  // ------------ Rendering ------------
-
-  function renderOrders() {
-    const filter = filterSelect.value; // all, 0, 50, 100
-
-    const filtered = orders.filter(o => {
-      if (filter === 'all') return true;
-      return String(o.completamento) === filter;
-    });
-
-    if (!filtered.length) {
-      container.innerHTML = '';
-      emptyMessage.style.display = 'block';
-      return;
-    }
-
-    emptyMessage.style.display = 'none';
-
-    container.innerHTML = filtered.map(order => `
-      <div class="order-card">
-        <div class="order-header">
-          <div>
-            <div class="order-title">${escapeHtml(order.titolo)}</div>
-            <div class="order-meta">
-              ${order.struttura ? escapeHtml(order.struttura) + ' · ' : ''}
-              ${order.reparto ? escapeHtml(order.reparto) : ''}
-            </div>
-          </div>
-          <span class="badge badge-${order.completamento}">
-            ${order.completamento === 0 ? '0% · Da fare'
-              : order.completamento === 50 ? '50% · Ordinato'
-              : '100% · Consegnato'}
-          </span>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Gestione Ordini Reparti</h1>
+            <p>Hotel Antares - Selva Gardena</p>
         </div>
 
-        ${order.descrizione ? `
-          <div class="info-row">
-            <span class="info-label">Descrizione:</span>
-            ${escapeHtml(order.descrizione)}
-          </div>
-        ` : ''}
+        <div class="form-container">
+            <div id="alert" style="display: none;"></div>
 
-        ${order.data ? `
-          <div class="info-row">
-            <span class="info-label">Data:</span>
-            ${escapeHtml(order.data)}
-          </div>
-        ` : ''}
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="struttura">Struttura *</label>
+                    <select id="struttura" required>
+                        <option value="">Seleziona struttura...</option>
+                        <option value="Hotel">Hotel</option>
+                        <option value="Residence">Residence</option>
+                        <option value="Lores">Lores</option>
+                        <option value="Boè">Boè</option>
+                    </select>
+                </div>
 
-        ${order.photos && order.photos.length ? `
-          <div class="info-row">
-            <span class="info-label">Foto:</span> ${order.photos.length}
-            <div class="photos">
-              ${order.photos.map(src => `
-                <img src="${src}" alt="Foto ordine">
-              `).join('')}
+                <div class="form-group">
+                    <label for="reparto">Reparto *</label>
+                    <select id="reparto" required>
+                        <option value="">Seleziona reparto...</option>
+                        <option value="Cucina">Cucina</option>
+                        <option value="Sala">Sala</option>
+                        <option value="Bar">Bar</option>
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Reception">Reception</option>
+                        <option value="Manutenzione">Manutenzione</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descrizione">Descrizione Articolo *</label>
+                    <input type="text" id="descrizione" required placeholder="Es: Tovaglioli bianchi 40x40">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantita">Quantità *</label>
+                    <input type="number" id="quantita" required min="1" placeholder="Es: 50">
+                </div>
+
+                <div class="form-group">
+                    <label for="unita">Unità di Misura *</label>
+                    <select id="unita" required>
+                        <option value="">Seleziona unità...</option>
+                        <option value="Pz">Pz (Pezzi)</option>
+                        <option value="Kg">Kg (Kilogrammi)</option>
+                        <option value="Lt">Lt (Litri)</option>
+                        <option value="Cf">Cf (Confezioni)</option>
+                        <option value="Sc">Sc (Scatole)</option>
+                        <option value="Pacco">Pacco</option>
+                        <option value="Rotolo">Rotolo</option>
+                        <option value="Mt">Mt (Metri)</option>
+                        <option value="Altro">Altro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fornitore">Fornitore (opzionale)</label>
+                    <input type="text" id="fornitore" placeholder="Es: MARR, FOPPA, Woerndle...">
+                </div>
+
+                <div class="form-group">
+                    <label for="note">Note (opzionale)</label>
+                    <textarea id="note" placeholder="Aggiungi dettagli aggiuntivi..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="urgenza">Urgenza *</label>
+                    <select id="urgenza" required>
+                        <option value="">Seleziona urgenza...</option>
+                        <option value="Urgente">🔴 Urgente</option>
+                        <option value="Per stagione in corso">🟡 Per stagione in corso</option>
+                        <option value="Fuori stagione">🟢 Fuori stagione</option>
+                    </select>
+                </div>
+
+                <div class="photo-section">
+                    <label>📷 Foto Allegate</label>
+                    <div class="photo-buttons">
+                        <button type="button" class="btn btn-camera" onclick="openCamera()">
+                            📸 Scatta Foto
+                        </button>
+                        <button type="button" class="btn btn-gallery" onclick="openGallery()">
+                            🖼️ Galleria
+                        </button>
+                    </div>
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" multiple onchange="handlePhotos(event)">
+                    <input type="file" id="galleryInput" accept="image/*" multiple onchange="handlePhotos(event)">
+                    <div id="photosPreview" class="photos-preview"></div>
+                    <div id="photoCount" class="photo-count"></div>
+                </div>
+
+                <button type="submit" class="btn btn-submit">✓ Aggiungi Ordine</button>
+            </form>
+
+            <div class="orders-list" id="ordersList">
+                <h2>Ordini Inseriti</h2>
+                <div id="ordersContainer"></div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-export" onclick="exportAllOrders()" style="display: none; flex: 1;" id="exportBtn">
+                        📤 Esporta Tutti gli Ordini
+                    </button>
+                    <button type="button" class="btn btn-delete" onclick="deleteAllOrders()" style="display: none; flex: 1;" id="deleteAllBtn">
+                        🗑️ Cancella Tutti gli Ordini
+                    </button>
+                </div>
             </div>
-          </div>
-        ` : ''}
-
-        <div class="completion-row">
-          <div class="status-text">Stato completamento:</div>
-          <select data-key="${order.key}" onchange="onChangeCompletion(this)">
-            <option value="0" ${order.completamento === 0 ? 'selected' : ''}>0% - Da fare</option>
-            <option value="50" ${order.completamento === 50 ? 'selected' : ''}>50% - Ordinato</option>
-            <option value="100" ${order.completamento === 100 ? 'selected' : ''}>100% - Consegnato</option>
-          </select>
         </div>
-      </div>
-    `).join('');
-  }
+    </div>
 
-  // handler chiamato dal select inline
-  window.onChangeCompletion = function(selectEl) {
-    const key = selectEl.dataset.key;
-    const value = Number(selectEl.value);
+    <script>
+        let photos = [];
+        let orders = [];
 
-    const order = orders.find(o => o.key === key);
-    if (!order) return;
+        function getStatusLabel(stato) {
+            const s = Number(stato);
+            if (s === 0) return '0% - Da fare';
+            if (s === 50) return '50% - Ordinato';
+            if (s === 100) return '100% - Consegnato';
+            return s + '%';
+        }
 
-    order.completamento = value;
-    saveOrders();
-    renderOrders(); // per aggiornare badge e testo
-  };
+        function getStatusClass(stato) {
+            const s = Number(stato);
+            if (s === 0) return 'status-0';
+            if (s === 50) return 'status-50';
+            if (s === 100) return 'status-100';
+            return 'status-0';
+        }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
+        // Carica ordini salvati
+        window.onload = function() {
+            const savedOrders = localStorage.getItem('orders');
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
 
-  // ------------ Export CSV ------------
+                // Backward compatibility: se non c'è stato, metti 0
+                orders = orders.map(o => ({
+                    ...o,
+                    stato: (typeof o.stato === 'undefined' || o.stato === null) ? 0 : o.stato
+                }));
 
-  exportCsvBtn.addEventListener('click', () => {
-    if (!orders.length) {
-      alert('Non ci sono ordini da esportare.');
-      return;
-    }
-    const header = ['Struttura', 'Reparto', 'Descrizione', 'Data', 'Foto', 'Completamento'];
-    const rows = orders.map(o => [
-      o.struttura || '',
-      o.reparto || '',
-      o.descrizione || '',
-      o.data || '',
-      o.photos ? o.photos.length : 0,
-      o.completamento
-    ]);
+                saveOrders();
+                displayOrders();
+            }
+        };
 
-    const csv = [header, ...rows]
-      .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'))
-      .join('\r\n');
+        function openCamera() {
+            document.getElementById('cameraInput').click();
+        }
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'ordini_completamento.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
+        function openGallery() {
+            document.getElementById('galleryInput').click();
+        }
 
-  // ------------ Svuota memoria ------------
+        function handlePhotos(event) {
+            const files = Array.from(event.target.files);
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photos.push({
+                        data: e.target.result,
+                        name: file.name
+                    });
+                    displayPhotos();
+                };
+                reader.readAsDataURL(file);
+            });
 
-  clearBtn.addEventListener('click', () => {
-    if (!confirm('Vuoi davvero cancellare tutti i completamenti salvati?')) return;
-    orders = [];
-    localStorage.removeItem(STORAGE_KEY);
-    renderOrders();
-  });
+            // Reset input
+            event.target.value = '';
+        }
 
-  // ------------ Init ------------
+        function displayPhotos() {
+            const preview = document.getElementById('photosPreview');
+            const count = document.getElementById('photoCount');
+            
+            preview.innerHTML = '';
+            photos.forEach((photo, index) => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-item';
+                photoDiv.innerHTML = `
+                    <img src="${photo.data}" alt="Foto ${index + 1}">
+                    <button class="photo-remove" onclick="removePhoto(${index})">×</button>
+                `;
+                preview.appendChild(photoDiv);
+            });
 
-  window.addEventListener('load', () => {
-    loadOrders();
-    renderOrders();
-  });
-</script>
+            count.textContent = photos.length > 0 ? `${photos.length} foto allegate` : '';
+        }
+
+        function removePhoto(index) {
+            photos.splice(index, 1);
+            displayPhotos();
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const order = {
+                id: Date.now(),
+                struttura: document.getElementById('struttura').value,
+                reparto: document.getElementById('reparto').value,
+                descrizione: document.getElementById('descrizione').value,
+                quantita: document.getElementById('quantita').value,
+                unita: document.getElementById('unita').value,
+                fornitore: document.getElementById('fornitore').value,
+                note: document.getElementById('note').value,
+                urgenza: document.getElementById('urgenza').value,
+                photos: [...photos],
+                data: new Date().toLocaleString('it-IT'),
+                // Nuovo campo: stato avanzamento (0, 50, 100)
+                stato: 0
+            };
+
+            orders.push(order);
+            saveOrders();
+            displayOrders();
+            showAlert('Ordine aggiunto con successo!');
+
+            // Reset form
+            this.reset();
+            photos = [];
+            displayPhotos();
+        });
+
+        function saveOrders() {
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        function displayOrders() {
+            const container = document.getElementById('ordersContainer');
+            const exportBtn = document.getElementById('exportBtn');
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun ordine inserito</p>';
+                exportBtn.style.display = 'none';
+                deleteAllBtn.style.display = 'none';
+                return;
+            }
+
+            exportBtn.style.display = 'block';
+            deleteAllBtn.style.display = 'block';
+            container.innerHTML = orders.map((order, index) => `
+                <div class="order-card">
+                    <h3>${order.descrizione}</h3>
+                    <div class="order-info"><strong>Struttura:</strong> ${order.struttura}</div>
+                    <div class="order-info"><strong>Reparto:</strong> ${order.reparto}</div>
+                    <div class="order-info"><strong>Quantità:</strong> ${order.quantita} ${order.unita}</div>
+                    ${order.fornitore ? `<div class="order-info"><strong>Fornitore:</strong> ${order.fornitore}</div>` : ''}
+                    <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
+                    ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
+                    <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
+                    <div class="order-info"><strong>Data:</strong> ${order.data}</div>
+
+                    <div class="order-info">
+                        <strong>Stato:</strong>
+                        <span class="status-badge ${getStatusClass(order.stato)}">
+                            ${getStatusLabel(order.stato)}
+                        </span>
+                    </div>
+
+                    <div class="order-actions">
+                        <div class="status-buttons">
+                            <button
+                                class="btn-status btn-status-0 ${Number(order.stato) === 0 ? 'active' : ''}"
+                                onclick="updateStatus(${index}, 0)"
+                                type="button">
+                                0% Da fare
+                            </button>
+                            <button
+                                class="btn-status btn-status-50 ${Number(order.stato) === 50 ? 'active' : ''}"
+                                onclick="updateStatus(${index}, 50)"
+                                type="button">
+                                50% Ordinato
+                            </button>
+                            <button
+                                class="btn-status btn-status-100 ${Number(order.stato) === 100 ? 'active' : ''}"
+                                onclick="updateStatus(${index}, 100)"
+                                type="button">
+                                100% Consegnato
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="order-actions" style="margin-top: 8px;">
+                        <button class="btn btn-small btn-export" onclick="exportOrder(${index})">📤 Esporta</button>
+                        <button class="btn btn-small btn-delete" onclick="deleteOrder(${index})">🗑️ Elimina</button>
+                    </div>
+
+                    ${order.photos.length > 0 ? `
+                        <div class="order-photos-preview">
+                            ${order.photos.map((photo, i) => `
+                                <img src="${photo.data}" alt="Foto ${i + 1}" class="order-photo-thumb">
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateStatus(index, value) {
+            orders[index].stato = value;
+            saveOrders();
+            displayOrders();
+        }
+
+        function deleteOrder(index) {
+            if (confirm('Sei sicuro di voler eliminare questo ordine?')) {
+                orders.splice(index, 1);
+                saveOrders();
+                displayOrders();
+                showAlert('Ordine eliminato', 'warning');
+            }
+        }
+
+        function deleteAllOrders() {
+            if (confirm('⚠️ ATTENZIONE: Sei sicuro di voler cancellare TUTTI gli ordini?\n\nQuesta operazione non può essere annullata!')) {
+                if (confirm('Confermi di voler eliminare tutti i ' + orders.length + ' ordini?')) {
+                    orders = [];
+                    saveOrders();
+                    displayOrders();
+                    showAlert('Tutti gli ordini sono stati cancellati', 'warning');
+                }
+            }
+        }
+
+        function exportOrder(index) {
+            const order = orders[index];
+            generateOrderHTML(order, `ordine_${order.reparto}_${order.id}.html`);
+        }
+
+        function exportAllOrders() {
+            if (orders.length === 0) return;
+
+            const allOrdersHTML = generateAllOrdersHTML(orders);
+            const blob = new Blob([allOrdersHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ordini_completi_${new Date().toISOString().split('T')[0]}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showAlert('Tutti gli ordini esportati con successo!');
+        }
+
+        function generateOrderHTML(order, filename) {
+            const html = `
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordine - ${order.reparto}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .header { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+        .info-row { margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+        .label { font-weight: bold; color: #333; }
+        .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .photos img { width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 Ordine Reparto</h1>
+        <p>Hotel Antares - Selva Gardena</p>
+    </div>
+    
+    <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
+    <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
+    <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
+    <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
+    ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
+    <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
+    ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
+    <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
+    <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
+    
+    ${order.photos.length > 0 ? `
+        <h2>Foto Allegate (${order.photos.length})</h2>
+        <div class="photos">
+            ${order.photos.map((photo, i) => `<img src="${photo.data}" alt="Foto ${i + 1}">`).join('')}
+        </div>
+    ` : ''}
+    
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">🖨️ Stampa</button>
+    </div>
+</body>
+</html>`;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showAlert('Ordine esportato con successo!');
+        }
+
+        function generateAllOrdersHTML(orders) {
+            return `
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutti gli Ordini</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 20px; }
+        .header { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; text-align: center; }
+        .order-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 30px; page-break-inside: avoid; }
+        .order-header { background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .info-row { margin: 10px 0; }
+        .label { font-weight: bold; color: #333; }
+        .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
+        .photos img { width: 100%; border-radius: 5px; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 Riepilogo Ordini Reparti</h1>
+        <p>Hotel Antares - Selva Gardena</p>
+        <p>Totale ordini: ${orders.length}</p>
+    </div>
+    
+    ${orders.map((order, i) => `
+        <div class="order-card">
+            <div class="order-header">
+                <h2>Ordine #${i + 1} - ${order.struttura} - ${order.reparto}</h2>
+            </div>
+            <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
+            <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
+            <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
+            <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
+            ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
+            <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
+            ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
+            <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
+            <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
+            ${order.photos.length > 0 ? `
+                <div class="info-row"><span class="label">Foto Allegate:</span> ${order.photos.length}</div>
+                <div class="photos">
+                    ${order.photos.map((photo, j) => `<img src="${photo.data}" alt="Foto ${j + 1}">`).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `).join('')}
+    
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">🖨️ Stampa Tutto</button>
+    </div>
+</body>
+</html>`;
+        }
+
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
