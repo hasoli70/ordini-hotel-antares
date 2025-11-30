@@ -2,846 +2,842 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Inserimento Ordini Reparti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordini Reparti - Hotel Antares</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            color: #e5e7eb;
-        }
-
-        h1, h2 {
-            margin: 0;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
         }
 
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 25px;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
 
-        .header-title {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .header-subtitle {
-            font-size: 13px;
-            color: #9ca3af;
-        }
-
-        .main-layout {
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .card {
-            background: rgba(15, 23, 42, 0.95);
-            border-radius: 16px;
-            padding: 18px 18px 16px;
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(148, 163, 184, 0.25);
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         label {
-            font-size: 13px;
             display: block;
-            margin-bottom: 4px;
-            color: #cbd5f5;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
         }
 
         input[type="text"],
+        input[type="number"],
         textarea,
         select {
             width: 100%;
-            padding: 7px 9px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            border: 1px solid #4b5563;
-            background-color: #020617;
-            color: #f9fafb;
-            font-size: 13px;
-        }
-
-        textarea {
-            min-height: 70px;
-            resize: vertical;
-        }
-
-        input[type="file"] {
-            font-size: 12px;
-            color: #e5e7eb;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
         }
 
         input[type="text"]:focus,
+        input[type="number"]:focus,
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4);
+            border-color: #667eea;
         }
 
-        .field-group {
-            margin-bottom: 10px;
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
-        .horizontal-group {
+        .photo-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .photo-buttons {
             display: flex;
             gap: 10px;
-        }
-
-        .horizontal-group .field-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 8px;
-            border-radius: 999px;
-            font-size: 11px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            gap: 6px;
-        }
-
-        .badge-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
-            background: #22c55e;
+            margin-bottom: 15px;
         }
 
         .btn {
+            flex: 1;
+            padding: 12px 20px;
             border: none;
-            border-radius: 999px;
-            padding: 7px 14px;
-            font-size: 13px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            display: inline-flex;
+            transition: all 0.3s;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            transition: transform 0.05s ease, box-shadow 0.1s ease, background 0.1s;
-            white-space: nowrap;
+            gap: 8px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            color: white;
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.5);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #818cf8, #4f46e5);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: rgba(15, 23, 42, 0.9);
-            color: #e5e7eb;
-            border: 1px solid #4b5563;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(30, 41, 59, 0.9);
-        }
-
-        .btn-small {
-            padding: 4px 9px;
-            font-size: 11px;
-        }
-
-        .btn-danger {
-            background: #b91c1c;
+        .btn-camera {
+            background: #4CAF50;
             color: white;
         }
 
-        .btn-danger:hover {
-            background: #dc2626;
+        .btn-camera:hover {
+            background: #45a049;
         }
 
-        .actions-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            margin-top: 10px;
+        .btn-gallery {
+            background: #2196F3;
+            color: white;
         }
 
-        .actions-row-left,
-        .actions-row-right {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        .btn-gallery:hover {
+            background: #0b7dda;
         }
 
-        .photo-preview {
-            margin-top: 8px;
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .photos-preview {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .photo-item {
             position: relative;
-            border-radius: 10px;
+            aspect-ratio: 1;
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #4b5563;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .photo-item img {
             width: 100%;
-            height: 70px;
+            height: 100%;
             object-fit: cover;
-            display: block;
         }
 
         .photo-remove {
             position: absolute;
-            top: 3px;
-            right: 3px;
-            background: rgba(15, 23, 42, 0.85);
-            border-radius: 999px;
-            padding: 2px 6px;
-            font-size: 10px;
+            top: 5px;
+            right: 5px;
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
             cursor: pointer;
-        }
-
-        .photo-info {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 5px;
-        }
-
-        .orders-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .filter-group {
+            font-size: 16px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
+            justify-content: center;
+        }
+
+        .photo-count {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            display: none;
         }
 
         .orders-list {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 4px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .orders-list h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
         }
 
         .order-card {
-            border-radius: 14px;
-            padding: 10px 11px;
-            margin-bottom: 8px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(55, 65, 81, 0.9);
-            display: grid;
-            grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr) minmax(0, 0.7fr);
-            gap: 8px;
-            font-size: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
         }
 
-        .order-main {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
+        .order-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
         }
 
-        .order-title {
-            font-weight: 600;
+        .order-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
         }
 
-        .order-dept {
-            font-size: 11px;
-            color: #a5b4fc;
-        }
-
-        .order-notes {
-            font-size: 11px;
-            color: #9ca3af;
-        }
-
-        .order-meta {
-            font-size: 11px;
-            color: #9ca3af;
-        }
-
-        .order-status {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 7px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .status-0 {
-            background: rgba(22, 78, 99, 0.9);
-            color: #f97316;
-        }
-
-        .status-50 {
-            background: rgba(69, 26, 3, 0.9);
-            color: #facc15;
-        }
-
-        .status-100 {
-            background: rgba(22, 101, 52, 0.9);
-            color: #4ade80;
-        }
-
-        .order-photos-count {
-            font-size: 11px;
-            color: #9ca3af;
+        .order-info strong {
+            color: #333;
         }
 
         .order-actions {
+            margin-top: 10px;
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 6px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .order-photos-grid {
-            margin-top: 6px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 4px;
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+            flex: 1;
         }
 
-        .order-photos-grid img {
-            width: 100%;
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-export {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .order-photos-preview {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+
+        .order-photo-thumb {
+            width: 60px;
             height: 60px;
+            border-radius: 5px;
             object-fit: cover;
+            border: 2px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
             border-radius: 8px;
-            border: 1px solid #4b5563;
+            font-size: 14px;
         }
 
-        .pill {
-            padding: 2px 7px;
-            border-radius: 999px;
-            font-size: 11px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        .pill-label {
-            color: #9ca3af;
-        }
-
-        .pill-value {
-            color: #e5e7eb;
-            font-weight: 500;
-        }
-
-        .footer-row {
-            margin-top: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: #9ca3af;
-        }
-
-        #statusMessage {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            background: rgba(15, 23, 42, 0.96);
-            border-radius: 999px;
-            padding: 7px 12px;
-            border: 1px solid rgba(52, 211, 153, 0.7);
-            color: #bbf7d0;
-            font-size: 12px;
-            display: none;
-            align-items: center;
-            gap: 7px;
-        }
-
-        #statusMessage.error {
-            border-color: rgba(248, 113, 113, 0.8);
-            color: #fecaca;
-        }
-
-        @media (max-width: 980px) {
-            .main-layout {
-                grid-template-columns: 1fr;
+        @media (max-width: 480px) {
+            .photo-buttons {
+                flex-direction: column;
             }
+        }
+
+        /* --- STATO AVANZAMENTO --- */
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-0 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-50 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-100 {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-buttons {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn-status {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 12px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+        }
+
+        .btn-status-0 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-status-50 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .btn-status-100 {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .btn-status:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            opacity: 0.95;
+        }
+
+        .btn-status.active {
+            outline: 2px solid rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <div>
-            <div class="header-title">Gestione Ordini Reparti</div>
-            <div class="header-subtitle">Inserimento, foto, filtro per stato, import/export JSON (data + orario)</div>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Gestione Ordini Reparti</h1>
+            <p>Hotel Antares - Selva Gardena</p>
         </div>
-        <div class="badge">
-            <span class="badge-dot"></span>
-            <span>Archivio ordini locale (file JSON)</span>
-        </div>
-    </div>
 
-    <div class="main-layout">
-        <!-- FORM INSERIMENTO -->
-        <div class="card">
-            <div class="card-title">
-                Nuovo ordine
-                <span style="font-size:11px;color:#9ca3af;">I campi con * sono obbligatori</span>
-            </div>
+        <div class="form-container">
+            <div id="alert" style="display: none;"></div>
 
             <form id="orderForm">
-                <div class="field-group">
+                <div class="form-group">
+                    <label for="struttura">Struttura *</label>
+                    <select id="struttura" required>
+                        <option value="">Seleziona struttura...</option>
+                        <option value="Hotel">Hotel</option>
+                        <option value="Residence">Residence</option>
+                        <option value="Lores">Lores</option>
+                        <option value="Boè">Boè</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="reparto">Reparto *</label>
                     <select id="reparto" required>
                         <option value="">Seleziona reparto...</option>
                         <option value="Cucina">Cucina</option>
                         <option value="Sala">Sala</option>
                         <option value="Bar">Bar</option>
+                        <option value="Housekeeping">Housekeeping</option>
                         <option value="Reception">Reception</option>
-                        <option value="Piani">Piani</option>
                         <option value="Manutenzione">Manutenzione</option>
-                        <option value="Wellness">Wellness</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descrizione">Descrizione Articolo *</label>
+                    <input type="text" id="descrizione" required placeholder="Es: Tovaglioli bianchi 40x40">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantita">Quantità *</label>
+                    <input type="number" id="quantita" required min="1" placeholder="Es: 50">
+                </div>
+
+                <div class="form-group">
+                    <label for="unita">Unità di Misura *</label>
+                    <select id="unita" required>
+                        <option value="">Seleziona unità...</option>
+                        <option value="Pz">Pz (Pezzi)</option>
+                        <option value="Kg">Kg (Kilogrammi)</option>
+                        <option value="Lt">Lt (Litri)</option>
+                        <option value="Cf">Cf (Confezioni)</option>
+                        <option value="Sc">Sc (Scatole)</option>
+                        <option value="Pacco">Pacco</option>
+                        <option value="Rotolo">Rotolo</option>
+                        <option value="Mt">Mt (Metri)</option>
                         <option value="Altro">Altro</option>
                     </select>
                 </div>
 
-                <div class="field-group">
-                    <label for="titolo">Titolo ordine *</label>
-                    <input type="text" id="titolo" required placeholder="Es. Acquisto tazze da cappuccino">
+                <div class="form-group">
+                    <label for="fornitore">Fornitore (opzionale)</label>
+                    <input type="text" id="fornitore" placeholder="Es: MARR, FOPPA, Woerndle...">
                 </div>
 
-                <div class="field-group">
-                    <label for="descrizione">Descrizione dettagliata *</label>
-                    <textarea id="descrizione" required placeholder="Descrivere esattamente cosa serve, misure, quantità, note tecniche..."></textarea>
+                <div class="form-group">
+                    <label for="note">Note (opzionale)</label>
+                    <textarea id="note" placeholder="Aggiungi dettagli aggiuntivi..."></textarea>
                 </div>
 
-                <div class="horizontal-group">
-                    <div class="field-group">
-                        <label for="stato">Stato avanzamento *</label>
-                        <select id="stato" required>
-                            <option value="0">0% - Da fare</option>
-                            <option value="50">50% - Ordinato</option>
-                            <option value="100">100% - Consegnato</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="urgenza">Priorità</label>
-                        <select id="urgenza">
-                            <option value="Normale">Normale</option>
-                            <option value="Alta">Alta</option>
-                            <option value="Critica">Critica</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field-group">
-                    <label for="note">Note interne (opzionale)</label>
-                    <textarea id="note" placeholder="Note per direzione, info aggiuntive, link, ecc."></textarea>
-                </div>
-
-                <div class="field-group">
-                    <label for="photosInput">Allega foto (più file consentiti)</label>
-                    <input type="file" id="photosInput" accept="image/*" multiple>
-                    <div id="photosPreview" class="photo-preview"></div>
-                    <div id="photoInfo" class="photo-info"></div>
-                </div>
-
-                <div class="actions-row">
-                    <div class="actions-row-left">
-                        <button type="submit" class="btn btn-primary">
-                            ➕ Aggiungi ordine
-                        </button>
-                    </div>
-                    <div class="actions-row-right">
-                        <button type="button" id="clearFormBtn" class="btn btn-secondary btn-small">
-                            Pulisci form
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- LISTA ORDINI -->
-        <div class="card">
-            <div class="orders-header">
-                <span class="card-title">Ordini salvati</span>
-                <div class="filter-group">
-                    <span>Filtro stato:</span>
-                    <select id="filterStatus" style="font-size:12px;padding:4px 7px;border-radius:999px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
-                        <option value="all">Tutti</option>
-                        <option value="0">0%</option>
-                        <option value="50">50%</option>
-                        <option value="100">100%</option>
+                <div class="form-group">
+                    <label for="urgenza">Urgenza *</label>
+                    <select id="urgenza" required>
+                        <option value="">Seleziona urgenza...</option>
+                        <option value="Urgente">🔴 Urgente</option>
+                        <option value="Per stagione in corso">🟡 Per stagione in corso</option>
+                        <option value="Fuori stagione">🟢 Fuori stagione</option>
                     </select>
                 </div>
-            </div>
 
-            <div class="actions-row" style="margin-bottom:8px;">
-                <div class="actions-row-left">
-                    <button type="button" id="exportBtn" class="btn btn-secondary btn-small">
-                        💾 Esporta JSON
-                    </button>
-                    <label class="btn btn-secondary btn-small" style="cursor:pointer;">
-                        📂 Importa JSON
-                        <input type="file" id="importInput" accept="application/json" style="display:none;">
-                    </label>
+                <div class="photo-section">
+                    <label>📷 Foto Allegate</label>
+                    <div class="photo-buttons">
+                        <button type="button" class="btn btn-camera" onclick="openCamera()">
+                            📸 Scatta Foto
+                        </button>
+                        <button type="button" class="btn btn-gallery" onclick="openGallery()">
+                            🖼️ Galleria
+                        </button>
+                    </div>
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" multiple onchange="handlePhotos(event)">
+                    <input type="file" id="galleryInput" accept="image/*" multiple onchange="handlePhotos(event)">
+                    <div id="photosPreview" class="photos-preview"></div>
+                    <div id="photoCount" class="photo-count"></div>
                 </div>
-                <div class="actions-row-right">
-                    <button type="button" id="clearAllBtn" class="btn btn-danger btn-small">
-                        🗑️ Cancella tutti
-                    </button>
-                </div>
-            </div>
+
+                <button type="submit" class="btn btn-submit">✓ Aggiungi Ordine</button>
+            </form>
 
             <div class="orders-list" id="ordersList">
-                <!-- Ordini renderizzati qui -->
+                <h2>Ordini Inseriti</h2>
+                <div id="ordersContainer"></div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-export" onclick="exportAllOrders()" style="display: none; flex: 1;" id="exportBtn">
+                        📤 Esporta Tutti gli Ordini
+                    </button>
+                    <button type="button" class="btn btn-delete" onclick="deleteAllOrders()" style="display: none; flex: 1;" id="deleteAllBtn">
+                        🗑️ Cancella Tutti gli Ordini
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="statusMessage"></div>
+    <script>
+        let photos = [];
+        let orders = [];
 
-<script>
-    // Array con le foto in preparazione per il nuovo ordine (DataURL)
-    let tempPhotos = [];
-    // Array principale con tutti gli ordini
-    let orders = [];
-
-    const photosInput = document.getElementById('photosInput');
-    const photosPreview = document.getElementById('photosPreview');
-    const photoInfo = document.getElementById('photoInfo');
-    const ordersList = document.getElementById('ordersList');
-    const filterStatus = document.getElementById('filterStatus');
-    const statusMessage = document.getElementById('statusMessage');
-
-    // --- GESTIONE FOTO PER NUOVO ORDINE ---
-
-    photosInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files || []);
-        if (!files.length) {
-            tempPhotos = [];
-            renderPhotoPreview();
-            return;
+        function getStatusLabel(stato) {
+            const s = Number(stato);
+            if (s === 0) return '0% - Da fare';
+            if (s === 50) return '50% - Ordinato';
+            if (s === 100) return '100% - Consegnato';
+            return s + '%';
         }
 
-        // Aggiungo le nuove foto a quelle già selezionate (permette più selezioni prima di salvare)
-        let remaining = files.length;
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                tempPhotos.push(ev.target.result);
-                remaining--;
-                if (remaining === 0) {
-                    renderPhotoPreview();
-                }
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Resetta l'input così puoi selezionare altre foto anche uguali
-        e.target.value = "";
-    });
-
-    function renderPhotoPreview() {
-        photosPreview.innerHTML = "";
-        if (!tempPhotos.length) {
-            photoInfo.textContent = "";
-            return;
+        function getStatusClass(stato) {
+            const s = Number(stato);
+            if (s === 0) return 'status-0';
+            if (s === 50) return 'status-50';
+            if (s === 100) return 'status-100';
+            return 'status-0';
         }
 
-        tempPhotos.forEach((src, idx) => {
-            const div = document.createElement('div');
-            div.className = 'photo-item';
-            div.innerHTML = `
-                <img src="${src}" alt="foto ordine">
-                <div class="photo-remove" data-index="${idx}">✕</div>
-            `;
-            photosPreview.appendChild(div);
-        });
+        // Carica ordini salvati
+        window.onload = function() {
+            const savedOrders = localStorage.getItem('orders');
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
 
-        const count = tempPhotos.length;
-        photoInfo.textContent = count === 1
-            ? "1 foto allegata"
-            : count + " foto allegate";
+                // Backward compatibility: se non c'è stato, metti 0
+                orders = orders.map(o => ({
+                    ...o,
+                    stato: (typeof o.stato === 'undefined' || o.stato === null) ? 0 : o.stato
+                }));
 
-        photosPreview.querySelectorAll('.photo-remove').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const index = parseInt(btn.getAttribute('data-index'));
-                tempPhotos.splice(index, 1);
-                renderPhotoPreview();
-            });
-        });
-    }
-
-    // --- INSERIMENTO ORDINE ---
-
-    document.getElementById('orderForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const reparto = document.getElementById('reparto').value.trim();
-        const titolo = document.getElementById('titolo').value.trim();
-        const descrizione = document.getElementById('descrizione').value.trim();
-        const stato = document.getElementById('stato').value;
-        const urgenza = document.getElementById('urgenza').value;
-        const note = document.getElementById('note').value.trim();
-
-        if (!reparto || !titolo || !descrizione) {
-            showStatus("Compila tutti i campi obbligatori (*).", true);
-            return;
-        }
-
-        const now = new Date();
-        const data = now.toLocaleDateString('it-IT'); // solo data
-        const ora = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); // solo orario
-
-        const order = {
-            id: Date.now().toString(),
-            reparto,
-            titolo,
-            descrizione,
-            stato: parseInt(stato, 10), // 0, 50, 100
-            urgenza,
-            note,
-            photos: [...tempPhotos],   // copie delle foto correnti
-            data,                      // es: 30/11/2025
-            ora                        // es: 14:35:21
+                saveOrders();
+                displayOrders();
+            }
         };
 
-        orders.push(order);
-        renderOrders();
-        showStatus("Ordine aggiunto correttamente.");
-
-        // Reset form
-        e.target.reset();
-        tempPhotos = [];
-        renderPhotoPreview();
-    });
-
-    document.getElementById('clearFormBtn').addEventListener('click', () => {
-        document.getElementById('orderForm').reset();
-        tempPhotos = [];
-        renderPhotoPreview();
-    });
-
-    // --- RENDER LISTA ORDINI ---
-
-    function renderOrders() {
-        ordersList.innerHTML = "";
-
-        const filter = filterStatus.value; // 'all', '0', '50', '100'
-        let filtered = orders.slice();
-
-        if (filter !== 'all') {
-            const target = parseInt(filter, 10);
-            filtered = filtered.filter(o => o.stato === target);
+        function openCamera() {
+            document.getElementById('cameraInput').click();
         }
 
-        if (!filtered.length) {
-            ordersList.innerHTML = `<div style="font-size:12px;color:#9ca3af;">Nessun ordine presente.</div>`;
-            return;
+        function openGallery() {
+            document.getElementById('galleryInput').click();
         }
 
-        filtered
-            .slice()
-            .sort((a, b) => b.id.localeCompare(a.id)) // ordini più recenti in alto
-            .forEach(order => {
-                const card = document.createElement('div');
-                card.className = 'order-card';
+        function handlePhotos(event) {
+            const files = Array.from(event.target.files);
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photos.push({
+                        data: e.target.result,
+                        name: file.name
+                    });
+                    displayPhotos();
+                };
+                reader.readAsDataURL(file);
+            });
 
-                const statoClass = order.stato === 0 ? 'status-0' :
-                                   order.stato === 50 ? 'status-50' : 'status-100';
+            // Reset input
+            event.target.value = '';
+        }
 
-                const statoLabel = order.stato + '%';
+        function displayPhotos() {
+            const preview = document.getElementById('photosPreview');
+            const count = document.getElementById('photoCount');
+            
+            preview.innerHTML = '';
+            photos.forEach((photo, index) => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-item';
+                photoDiv.innerHTML = `
+                    <img src="${photo.data}" alt="Foto ${index + 1}">
+                    <button class="photo-remove" onclick="removePhoto(${index})">×</button>
+                `;
+                preview.appendChild(photoDiv);
+            });
 
-                card.innerHTML = `
-                    <div class="order-main">
-                        <div class="order-title">${escapeHtml(order.titolo)}</div>
-                        <div class="order-dept">${escapeHtml(order.reparto)}</div>
-                        <div class="order-notes">${escapeHtml(order.descrizione)}</div>
-                        ${order.note ? `<div class="order-notes"><strong>Note:</strong> ${escapeHtml(order.note)}</div>` : ''}
-                        ${order.photos && order.photos.length ? `
-                            <div class="order-photos-grid">
-                                ${order.photos.map(src => `<img src="${src}" alt="foto ordine">`).join('')}
-                            </div>
-                        ` : ''}
+            count.textContent = photos.length > 0 ? `${photos.length} foto allegate` : '';
+        }
+
+        function removePhoto(index) {
+            photos.splice(index, 1);
+            displayPhotos();
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const order = {
+                id: Date.now(),
+                struttura: document.getElementById('struttura').value,
+                reparto: document.getElementById('reparto').value,
+                descrizione: document.getElementById('descrizione').value,
+                quantita: document.getElementById('quantita').value,
+                unita: document.getElementById('unita').value,
+                fornitore: document.getElementById('fornitore').value,
+                note: document.getElementById('note').value,
+                urgenza: document.getElementById('urgenza').value,
+                photos: [...photos],
+                data: new Date().toLocaleString('it-IT'),
+                // Nuovo campo: stato avanzamento (0, 50, 100)
+                stato: 0
+            };
+
+            orders.push(order);
+            saveOrders();
+            displayOrders();
+            showAlert('Ordine aggiunto con successo!');
+
+            // Reset form
+            this.reset();
+            photos = [];
+            displayPhotos();
+        });
+
+        function saveOrders() {
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        function displayOrders() {
+            const container = document.getElementById('ordersContainer');
+            const exportBtn = document.getElementById('exportBtn');
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun ordine inserito</p>';
+                exportBtn.style.display = 'none';
+                deleteAllBtn.style.display = 'none';
+                return;
+            }
+
+            exportBtn.style.display = 'block';
+            deleteAllBtn.style.display = 'block';
+            container.innerHTML = orders.map((order, index) => `
+                <div class="order-card">
+                    <h3>${order.descrizione}</h3>
+                    <div class="order-info"><strong>Struttura:</strong> ${order.struttura}</div>
+                    <div class="order-info"><strong>Reparto:</strong> ${order.reparto}</div>
+                    <div class="order-info"><strong>Quantità:</strong> ${order.quantita} ${order.unita}</div>
+                    ${order.fornitore ? `<div class="order-info"><strong>Fornitore:</strong> ${order.fornitore}</div>` : ''}
+                    <div class="order-info"><strong>Urgenza:</strong> ${order.urgenza}</div>
+                    ${order.note ? `<div class="order-info"><strong>Note:</strong> ${order.note}</div>` : ''}
+                    <div class="order-info"><strong>Foto:</strong> ${order.photos.length}</div>
+                    <div class="order-info"><strong>Data:</strong> ${order.data}</div>
+
+                    <div class="order-info">
+                        <strong>Stato:</strong>
+                        <span class="status-badge ${getStatusClass(order.stato)}">
+                            ${getStatusLabel(order.stato)}
+                        </span>
                     </div>
-                    <div>
-                        <div class="order-meta">
-                            <span class="pill">
-                                <span class="pill-label">Priorità</span>
-                                <span class="pill-value">${escapeHtml(order.urgenza || 'Normale')}</span>
-                            </span>
-                        </div>
-                        <div style="margin-top:6px;">
-                            <span class="order-photos-count">
-                                Foto: ${order.photos ? order.photos.length : 0}
-                            </span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="order-status ${statoClass}">
-                            Stato: ${statoLabel}
-                        </div>
-                        <div style="margin-top:6px;font-size:11px;color:#9ca3af;">
-                            <div><strong>Data:</strong> ${order.data || '-'}</div>
-                            <div><strong>Ora:</strong> ${order.ora || '-'}</div>
-                        </div>
-                        <div class="order-actions" style="margin-top:6px;">
-                            <button class="btn btn-secondary btn-small" data-id="${order.id}" data-action="delete">
-                                Elimina
+
+                    <div class="order-actions">
+                        <div class="status-buttons">
+                            <button
+                                class="btn-status btn-status-0 ${Number(order.stato) === 0 ? 'active' : ''}"
+                                onclick="updateStatus(${index}, 0)"
+                                type="button">
+                                0% Da fare
+                            </button>
+                            <button
+                                class="btn-status btn-status-50 ${Number(order.stato) === 50 ? 'active' : ''}"
+                                onclick="updateStatus(${index}, 50)"
+                                type="button">
+                                50% Ordinato
+                            </button>
+                            <button
+                                class="btn-status btn-status-100 ${Number(order.stato) === 100 ? 'active' : ''}"
+                                onclick="updateStatus(${index}, 100)"
+                                type="button">
+                                100% Consegnato
                             </button>
                         </div>
                     </div>
-                `;
-                ordersList.appendChild(card);
-            });
 
-        // Event handler per tasto Elimina
-        ordersList.querySelectorAll('button[data-action="delete"]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.getAttribute('data-id');
-                orders = orders.filter(o => o.id !== id);
-                renderOrders();
-                showStatus("Ordine eliminato.");
-            });
-        });
-    }
+                    <div class="order-actions" style="margin-top: 8px;">
+                        <button class="btn btn-small btn-export" onclick="exportOrder(${index})">📤 Esporta</button>
+                        <button class="btn btn-small btn-delete" onclick="deleteOrder(${index})">🗑️ Elimina</button>
+                    </div>
 
-    filterStatus.addEventListener('change', renderOrders);
-
-    // --- EXPORT / IMPORT JSON ---
-
-    document.getElementById('exportBtn').addEventListener('click', () => {
-        if (!orders.length) {
-            showStatus("Non ci sono ordini da esportare.", true);
-            return;
+                    ${order.photos.length > 0 ? `
+                        <div class="order-photos-preview">
+                            ${order.photos.map((photo, i) => `
+                                <img src="${photo.data}" alt="Foto ${i + 1}" class="order-photo-thumb">
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
         }
 
-        const dataStr = JSON.stringify(orders, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8;' });
+        function updateStatus(index, value) {
+            orders[index].stato = value;
+            saveOrders();
+            displayOrders();
+        }
 
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const now = new Date();
-        const nameDate = now.toISOString().slice(0, 10); // YYYY-MM-DD
-        a.href = url;
-        a.download = `ordini_${nameDate}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        showStatus("File JSON esportato (data + ora per ogni ordine).");
-    });
-
-    document.getElementById('importInput').addEventListener('change', (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            try {
-                const imported = JSON.parse(ev.target.result);
-                if (!Array.isArray(imported)) {
-                    throw new Error("Formato non valido");
-                }
-
-                // Normalizza campo data/ora se manca (vecchie versioni)
-                imported.forEach(o => {
-                    if (!o.data || !o.ora && o.dataOra) {
-                        // caso in cui prima avevi un unico campo 'data' con data+ora
-                        const parts = String(o.data || o.dataOra).split(' ');
-                        o.data = parts[0] || '';
-                        o.ora = parts[1] || '';
-                    }
-                    if (!o.id) {
-                        o.id = Date.now().toString() + Math.random().toString(16).slice(2);
-                    }
-                    if (!Array.isArray(o.photos)) {
-                        o.photos = [];
-                    }
-                });
-
-                orders = imported;
-                renderOrders();
-                showStatus("Ordini importati correttamente.");
-            } catch (err) {
-                console.error(err);
-                showStatus("Errore nell'import del file JSON.", true);
-            } finally {
-                e.target.value = "";
+        function deleteOrder(index) {
+            if (confirm('Sei sicuro di voler eliminare questo ordine?')) {
+                orders.splice(index, 1);
+                saveOrders();
+                displayOrders();
+                showAlert('Ordine eliminato', 'warning');
             }
-        };
-        reader.readAsText(file, 'utf-8');
-    });
-
-    document.getElementById('clearAllBtn').addEventListener('click', () => {
-        if (!orders.length) {
-            showStatus("Non ci sono ordini da cancellare.", true);
-            return;
         }
-        const sure = confirm("Vuoi cancellare TUTTI gli ordini?");
-        if (!sure) return;
-        orders = [];
-        renderOrders();
-        showStatus("Tutti gli ordini sono stati eliminati.");
-    });
 
-    // --- UTILITY ---
+        function deleteAllOrders() {
+            if (confirm('⚠️ ATTENZIONE: Sei sicuro di voler cancellare TUTTI gli ordini?\n\nQuesta operazione non può essere annullata!')) {
+                if (confirm('Confermi di voler eliminare tutti i ' + orders.length + ' ordini?')) {
+                    orders = [];
+                    saveOrders();
+                    displayOrders();
+                    showAlert('Tutti gli ordini sono stati cancellati', 'warning');
+                }
+            }
+        }
 
-    function showStatus(message, isError = false) {
-        statusMessage.textContent = message;
-        statusMessage.classList.toggle('error', !!isError);
-        statusMessage.style.display = 'flex';
+        function exportOrder(index) {
+            const order = orders[index];
+            generateOrderHTML(order, `ordine_${order.reparto}_${order.id}.html`);
+        }
 
-        setTimeout(() => {
-            statusMessage.style.display = 'none';
-        }, 3000);
-    }
+        function exportAllOrders() {
+            if (orders.length === 0) return;
 
-    function escapeHtml(str) {
-        if (!str) return "";
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
+            const allOrdersHTML = generateAllOrdersHTML(orders);
+            const blob = new Blob([allOrdersHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ordini_completi_${new Date().toISOString().split('T')[0]}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showAlert('Tutti gli ordini esportati con successo!');
+        }
 
-    // Avvio
-    renderOrders();
-</script>
+        function generateOrderHTML(order, filename) {
+            const html = `
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordine - ${order.reparto}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .header { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+        .info-row { margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+        .label { font-weight: bold; color: #333; }
+        .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .photos img { width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 Ordine Reparto</h1>
+        <p>Hotel Antares - Selva Gardena</p>
+    </div>
+    
+    <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
+    <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
+    <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
+    <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
+    ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
+    <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
+    ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
+    <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
+    <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
+    
+    ${order.photos.length > 0 ? `
+        <h2>Foto Allegate (${order.photos.length})</h2>
+        <div class="photos">
+            ${order.photos.map((photo, i) => `<img src="${photo.data}" alt="Foto ${i + 1}">`).join('')}
+        </div>
+    ` : ''}
+    
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">🖨️ Stampa</button>
+    </div>
+</body>
+</html>`;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showAlert('Ordine esportato con successo!');
+        }
+
+        function generateAllOrdersHTML(orders) {
+            return `
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutti gli Ordini</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 20px; }
+        .header { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; text-align: center; }
+        .order-card { border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin-bottom: 30px; page-break-inside: avoid; }
+        .order-header { background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .info-row { margin: 10px 0; }
+        .label { font-weight: bold; color: #333; }
+        .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
+        .photos img { width: 100%; border-radius: 5px; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 Riepilogo Ordini Reparti</h1>
+        <p>Hotel Antares - Selva Gardena</p>
+        <p>Totale ordini: ${orders.length}</p>
+    </div>
+    
+    ${orders.map((order, i) => `
+        <div class="order-card">
+            <div class="order-header">
+                <h2>Ordine #${i + 1} - ${order.struttura} - ${order.reparto}</h2>
+            </div>
+            <div class="info-row"><span class="label">Struttura:</span> ${order.struttura}</div>
+            <div class="info-row"><span class="label">Reparto:</span> ${order.reparto}</div>
+            <div class="info-row"><span class="label">Descrizione:</span> ${order.descrizione}</div>
+            <div class="info-row"><span class="label">Quantità:</span> ${order.quantita} ${order.unita}</div>
+            ${order.fornitore ? `<div class="info-row"><span class="label">Fornitore:</span> ${order.fornitore}</div>` : ''}
+            <div class="info-row"><span class="label">Urgenza:</span> ${order.urgenza}</div>
+            ${order.note ? `<div class="info-row"><span class="label">Note:</span> ${order.note}</div>` : ''}
+            <div class="info-row"><span class="label">Data:</span> ${order.data}</div>
+            <div class="info-row"><span class="label">Stato:</span> ${getStatusLabel(order.stato)}</div>
+            ${order.photos.length > 0 ? `
+                <div class="info-row"><span class="label">Foto Allegate:</span> ${order.photos.length}</div>
+                <div class="photos">
+                    ${order.photos.map((photo, j) => `<img src="${photo.data}" alt="Foto ${j + 1}">`).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `).join('')}
+    
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">🖨️ Stampa Tutto</button>
+    </div>
+</body>
+</html>`;
+        }
+
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
